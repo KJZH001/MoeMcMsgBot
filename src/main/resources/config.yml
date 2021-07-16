@@ -1,0 +1,41 @@
+# 确保 mirai 安装了 mirai-api-http
+
+# api-http 的地址
+host: localhost:8080
+# api-http 中的 authKey 用于验证身份
+authKey: 123456
+# bot 的QQ
+botID: 123456789
+# bot 默认启用的群号
+groupID: 987654321
+# 启用bot
+enable-bot: false
+
+# 验证消息失效时间， 单位: 分钟
+time: 5
+
+# QQ号的正则表达式， 用于绑定时检测有没有输入正确的QQ号
+regex: '[1-9][0-9]{8,10}'
+
+# 调试模式
+# 非必要无需打开
+# 否则只会增多无用的日志输出！
+DEBUG: false
+
+#消息抓取默认设置
+catch:
+  # 消息抓取的类型
+  # text 为只抓取纯文本类消息
+  # multi 为抓取复合消息
+  # ## 只有当此选项为 multi 类型时
+  # img, at, emoji 等类型的抓取才有效
+  type: multi
+  # 如果为multi 则下面选项中必须有一个为true
+  # 否则将不会向游戏内推送消息e
+  # 抓取纯文本消息
+  text: true
+  # 抓取图片消息
+  img: true
+  # 抓取at消息
+  at: true
+

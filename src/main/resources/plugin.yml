@@ -1,0 +1,6 @@
+name: EasyBot_Reloaded
+version: ${ver}
+main: me.ed333.easyBot.BotMain
+api-version: 1.16
+commands:
+  bot:

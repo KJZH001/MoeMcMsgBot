@@ -1,0 +1,74 @@
+# 可用 papi 变量
+
+verify_text:
+  '尊敬的玩家 %player_name%,
+  你正在进行绑定验证,
+  你的验证码为: %1,
+  请在 %2 分钟内使用此验证码。
+  使用方法: /bot verify %1
+  如果这不是你的操作，请无视本条消息。'
+
+
+verify_success: '&7&l[&a提示&7&l] &a验证通过。'
+verifyCode_Err: '&7&l[&a提示&7&l] &c验证码错误。'
+
+reload: '&7&l[&a提示&7&l] &a插件已重新加载！'
+InvalidArgs: '&7&l[&a提示&7&l] &c命令参数或QQ号似乎不对哦。'
+verify_msgSend: '&7&l[&a提示&7&l] &a已向你的QQ发送认证消息！（如果你没在群 %txt_group%, 你将无法收到认证消息！)'
+notPlayer: '&7&l[&a提示&7&l] &c你不是玩家！只有玩家才能执行此指令。'
+permissionDeny: '&7&l[&a提示&7&l] &c你没有权限！'
+
+disable_Bot: '&3BOT: &e已禁用'
+enable_Bot: '&3BOT: &a已启用'
+
+player_enableBot: '&7&l[&a提示&7&l] &a你启用了 Bot!'
+player_disableBot: '&7&l[&a提示&7&l] &c你禁用了 Bot!'
+notInVerifying: '&7&l[&a提示&7&l] &c你没有要进行的验证！'
+QQisBound: '&7&l[&a提示&7&l] &c这个QQ已经绑定了！'
+
+unKnowCmd: '&7&l[&a提示&7&l] &c未知的命令。请输入 "/bot help" 查看帮助。'
+
+help:
+  - '&b=---=---=---=---=---=---=---=---='
+  - '&7EasyBot 指令帮助:'
+  - '   &7- &f/bot help'
+  - '   &7- &f/bot on 启用bot'
+  - '   &7- &f/bot off 禁用bot'
+  - '   &7- &f/bot reload 重载bot'
+  - '   &7- &f/bot enable 开启自己的bot'
+  - '   &7- &f/bot disable 关闭自己的bot'
+  - '   &7- &f/bot verify <code> 验证身份'
+  - '   &7- &f/bot bind <qq> 绑定qq到游戏帐户'
+  - '   &7- &f/bot debug 即刻输出一些调试信息供作者参用'
+  - '&b=---=---=---=---=---=---=---=---='
+
+text: '&7[&aQQ群&7] &7%txt_sender_gameName% 说: '
+
+unBound_QQ:
+  text: '&7[&c未绑定的QQ&7]'
+  hoverEvent:
+    - '发送者: %txt_sender_name%'
+    - 'QQ: %txt_sender_qq%'
+    - '这个QQ还没有绑定哦，暂时无法显示名称'
+
+Image:
+  text: '&7[&a图片&7]'
+  hoverEvent:
+    - '发送者: %txt_sender_name%'
+    - 'qq: %txt_sender_qq%'
+    - 'imageID: %txt_image_id%'
+    - 'imageUrl: %txt_image_url%'
+    - '这是一张图片，点击它来打开'
+
+At:
+  text: '&7[&b@%txt_at_targetName%&7]'
+  hoverEvent:
+    - '发送者: %txt_sender_name%(%txt_sender_qq%)'
+    - '被AT的人: %txt_at_targetName%(%txt_at_targetID%)'
+    - '  游戏名字: %txt_at_target_gameName%'
+
+Plain:
+  hoverEvent:
+    - '发送者: %txt_sender_name%'
+    - '游戏名字: %txt_sender_gameName%'
+    - 'QQ: %txt_sender_qq%'
