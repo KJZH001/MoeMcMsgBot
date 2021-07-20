@@ -1,4 +1,4 @@
-# 确保 mirai 安装了 mirai-api-http
+# 确保 mirai 安装了 2.0版以上的mirai-api-http
 
 # api-http 的地址
 host: localhost:8080
