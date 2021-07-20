@@ -106,7 +106,7 @@ public class JsonParse {
 
     /**
      * 获取所有的纯文本消息
-     * <p>仅获取纯文本</p>
+     * <p>获取纯文本 + QQ表情的文字版本</p>
      * @param msg_json 接收到的JSON
      * @return Raw text
      */
@@ -126,7 +126,7 @@ public class JsonParse {
      * 获取复合消息
      * <p>目前可以获取</p>
      * <ul>
-     *     <li>纯文本</li>
+     *     <li>纯文本 + QQ表情文字版</li>
      *     <li>Image</li>
      *     <li>AT</li>
      * </ul>
