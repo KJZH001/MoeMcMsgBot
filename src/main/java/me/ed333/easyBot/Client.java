@@ -26,8 +26,9 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        Messages.printDEBUG(message);
         JSONObject msg_json = JSONObject.fromObject(message);
+        if (BOT.get_apiVer() >= 2.0) msg_json = msg_json.getJSONObject("data");
+        Messages.printDEBUG(msg_json.toString());
         PlaceHolders.recvMsg_json = msg_json;
         new BotEventHandle(msg_json);
         new GroupEventHandle(msg_json);

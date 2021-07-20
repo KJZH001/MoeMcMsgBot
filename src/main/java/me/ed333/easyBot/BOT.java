@@ -22,11 +22,12 @@ public class BOT {
     private static Client client;
 
     public static String session;
+    public static int codeLength = BotMain.cfg.getInt("codeLength");
     public static long botID = BotMain.cfg.getLong("botID");
     public static String url = BotMain.cfg.getString("host");
     public static int verifyTime = BotMain.cfg.getInt("time");
     public static long groupID = BotMain.cfg.getLong("groupID");
-    public static String authKey = BotMain.cfg.getString("authKey");
+    public static String Key = BotMain.cfg.getString("Key");
     public static boolean catch_at = BotMain.cfg.getBoolean("catch.at");
     public static boolean catch_img = BotMain.cfg.getBoolean("catch.img");
     public static boolean enableBot = BotMain.cfg.getBoolean("enable_Bot");
@@ -38,6 +39,12 @@ public class BOT {
     // k: player name  v: QQ
     public static HashMap<String, Long> verifyPlayers = new HashMap<>();
 
+    public static double get_apiVer() {
+        JSONObject version = JSONObject.fromObject(doGet("http://" + url + "//about", null)).getJSONObject("data");
+        String[] versionSpil = version.getString("version").split("\\.");
+        return Double.parseDouble(versionSpil[0]);
+    }
+
     /**
      * 连接 Bot 的 Socket 服务器
      * @param session session
@@ -45,8 +52,10 @@ public class BOT {
      */
     public static void connect(String session) throws URISyntaxException {
         sender.sendMessage("§3BOT: §a链接服务器中...");
-        URI uri = new URI("ws://" + url + "/all?sessionKey=" + session);
-        client = new Client(uri);
+        URI uri_api_1 = new URI("ws://" + url + "/all?sessionKey=" + session);
+        URI uri_api_2 = new URI("ws://" + url + "/all?verifyKey=" + Key + "&qq=" + botID);
+        if (get_apiVer() < 2.0) client = new Client(uri_api_1);
+        else client = new Client(uri_api_2);
         client.connect();
     }
 
@@ -68,11 +77,15 @@ public class BOT {
         } else sender.sendMessage("§3BOT: §c验证失败！返回结果: " + authResult);
     }
 
+    /**
+     * 生成验证码
+     * @return verify code
+     */
     public static int genVerifyCode() {
         StringBuilder sb = new StringBuilder();
         int code;
         SecureRandom r = new SecureRandom();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < codeLength + 1; i++) {
             code = r.nextInt(9);
             sb.append(code);
         }
@@ -101,7 +114,8 @@ public class BOT {
      */
     public static String auth() throws Exception {
         sender.sendMessage("§3BOT: §a注册bot...");
-        return doPost("http://" + url + "/auth", new JSONObject().element("authKey", authKey));
+        if (get_apiVer() < 2.0 ) return doPost("http://" + url + "/auth", new JSONObject().element("authKey", Key));
+        else return doPost("http://" + url + "/verify", new JSONObject().element("verifyKey", Key));
     }
 
     /**
@@ -112,7 +126,8 @@ public class BOT {
      */
     public static String verify(String SessionKey) throws Exception {
         sender.sendMessage("§3BOT: §a绑定BOT...");
-        return doPost("http://" + url + "/verify", new JSONObject().element("sessionKey", SessionKey).element("qq", botID));
+        if (get_apiVer() < 2.0) return doPost("http://" + url + "/verify", new JSONObject().element("sessionKey", SessionKey).element("qq", botID));
+        else return doPost("http://" + url + "/bind", new JSONObject().element("sessionKey", SessionKey).element("qq", botID));
     }
 
     /**
@@ -280,6 +295,9 @@ public class BOT {
         return bound_name.contains(name);
     }
 
+    /**
+     * 验证码自销
+     */
     static class codeAutomaticallyExpires extends BukkitRunnable {
         private final String playerName;
         public codeAutomaticallyExpires(String name) {
