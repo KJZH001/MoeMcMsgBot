@@ -26,13 +26,20 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        JSONObject msg_json = JSONObject.fromObject(message);
-        if (BOT.get_apiVer() >= 2.0) msg_json = msg_json.getJSONObject("data");
-        Messages.printDEBUG(msg_json.toString());
-        PlaceHolders.recvMsg_json = msg_json;
-        new BotEventHandle(msg_json);
-        new GroupEventHandle(msg_json);
-        new MessageEventHandle(msg_json);
+        try {
+            Messages.printDEBUG(message);
+            JSONObject init_json = JSONObject.fromObject(message);
+            JSONObject msg_json = JSONObject.fromObject(init_json.getJSONObject("data"));
+            PlaceHolders.recvMsg_json = msg_json;
+            new BotEventHandle(msg_json);
+            new GroupEventHandle(msg_json);
+            new MessageEventHandle(msg_json);
+        } catch (Exception e) {
+            //Messages.printDEBUG("§3BOT: §e未知类型消息：");
+            //Messages.printDEBUG(message);
+            sender.sendMessage("§3BOT: §e未知类型消息：");
+            sender.sendMessage(message);
+        }
     }
 
     @Override

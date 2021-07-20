@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.sf.json.JSONObject;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * <p>请勿直接使用本事件， 为了方便维护才写的。。</p>
@@ -27,7 +28,7 @@ class MessageEvent extends Event {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 

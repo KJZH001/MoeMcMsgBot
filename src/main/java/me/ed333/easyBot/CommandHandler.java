@@ -18,10 +18,10 @@ import static me.ed333.easyBot.BotMain.*;
 
 public class CommandHandler implements CommandExecutor {
 
-    private final BotMain i = BotMain.INSTANCE;
+    private BotMain i = BotMain.INSTANCE;
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         try {
 
             if (command.getName().equalsIgnoreCase("bot")) {
@@ -100,10 +100,10 @@ public class CommandHandler implements CommandExecutor {
                                             )
                                     );
                                     // 建立验证码自销任务
-                                    new codeAutomaticallyExpires(p.getName()).runTaskLater(BotMain.getPlugin(BotMain.class), verifyTime*60*20);
+                                    new BOT.codeAutomaticallyExpires(p.getName()).runTaskLater(BotMain.getPlugin(BotMain.class), verifyTime*60*20);
 
-                                    printDEBUG(" send result: " + str);
-                                    printDEBUG( "codeMap: " + codeMap);
+                                    printDEBUG("send result: " + str);
+                                    printDEBUG("codeMap: " + codeMap);
                                 } else sender.sendMessage(getMsg("QQisBound", null));
 
                             } else sender.sendMessage(getMsg("InvalidArgs", null));

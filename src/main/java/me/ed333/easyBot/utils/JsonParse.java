@@ -104,9 +104,11 @@ public class JsonParse {
 
     public String getSender_Msg(JSONObject msg_plain) {return msg_plain.getString("text");}
 
+    public String getSender_Face(JSONObject msg_plain) {return "[" + msg_plain.getString("name") + "]";}
+
     /**
      * 获取所有的纯文本消息
-     * <p>仅获取纯文本</p>
+     * <p>获取纯文本 + QQ表情的文字版本</p>
      * @param msg_json 接收到的JSON
      * @return Raw text
      */
@@ -118,6 +120,7 @@ public class JsonParse {
             String type = msg_Single.getString("type");
 
             if (type.equals("Plain")) sb.append(msg_Single.getString("text"));
+            if (type.equals("Face")) sb.append("[").append(msg_Single.getString("name")).append("]");
         }
         return sb.toString();
     }
@@ -125,7 +128,7 @@ public class JsonParse {
      * 获取复合消息
      * <p>目前可以获取</p>
      * <ul>
-     *     <li>纯文本</li>
+     *     <li>纯文本 + QQ表情文字版</li>
      *     <li>Image</li>
      *     <li>AT</li>
      * </ul>
@@ -140,9 +143,14 @@ public class JsonParse {
             JSONObject msgSingle = JSONObject.fromObject(o);
             String type = msgSingle.getString("type");
 
-            if (type.equals("Plain") && BOT.catch_text) {
+            if ((type.equals("Plain") || type.equals("Face") ) && BOT.catch_text) {
                 PlaceHolders.msg_Plain = msgSingle;
-                TextComponent plain_text = new TextComponent(getSender_Msg(msgSingle));
+                TextComponent plain_text;
+                if (type.equals("Face")) {
+                    plain_text = new TextComponent(getSender_Face(msgSingle));
+                } else {
+                    plain_text = new TextComponent(getSender_Msg(msgSingle));
+                }
                 plain_text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder(
                                 hoverEvent_txt_replace(getMsg("Plain.hoverEvent", null))
