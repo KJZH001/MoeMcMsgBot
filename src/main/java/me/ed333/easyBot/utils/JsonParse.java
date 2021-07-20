@@ -118,7 +118,7 @@ public class JsonParse {
             String type = msg_Single.getString("type");
 
             if (type.equals("Plain")) sb.append(msg_Single.getString("text"));
-            if (type.equals("Face")) sb.append("[" + msg_Single.getString("name") + "]");
+            if (type.equals("Face")) sb.append("[").append(msg_Single.getString("name")).append("]");
         }
         return sb.toString();
     }
