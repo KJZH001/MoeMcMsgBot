@@ -9,13 +9,10 @@ import net.sf.json.JSONObject;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
 
 public final class BotMain extends JavaPlugin {
     
@@ -49,14 +46,9 @@ public final class BotMain extends JavaPlugin {
 
             Bukkit.getPluginManager().registerEvents(new ListeningEvent(), this);
             this.getCommand("bot").setExecutor(new CommandHandler());
-
-            Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
-            for (Player p : onlinePlayers) {
-                if (playerConfig.getBoolean(p.getUniqueId() + ".enable_Bot")) {
-                    BOT.enableBot_Players.add(p);
-                }
-            }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -89,30 +81,6 @@ public final class BotMain extends JavaPlugin {
         if (boundData.getKeys(false).isEmpty()) {
             boundData.createSection("QQ_Bound");
             boundData.createSection("Name_Bound");
-        }
-
-        if (cfgFile.exists() || langFile.exists()) {
-            // 自定添加配置
-            InputStream cfgStream_in = getResource("config.yml");
-            YamlConfiguration resourceCfg = YamlConfiguration.loadConfiguration(new InputStreamReader(cfgStream_in));
-            Set<String> resourceCfgKeys = resourceCfg.getKeys(true);
-
-            for (String key : resourceCfgKeys) {
-                Object configVal = cfg.get(key);
-                if (configVal == null) cfg.set(key, resourceCfg.get(key));
-            }
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(getResource("lang.yml"), StandardCharsets.UTF_8));
-            YamlConfiguration resourceLang = YamlConfiguration.loadConfiguration(br);
-            Set<String> resourceLangKeys = resourceLang.getKeys(true);
-
-            for (String key : resourceLangKeys) {
-                Object langVal = lang.get(key);
-                if (langVal == null) lang.set(key, resourceLang.get(key));
-            }
-
-            cfg.save(cfgFile);
-            lang.save(langFile);
         }
     }
 }

@@ -118,6 +118,7 @@ public class JsonParse {
             String type = msg_Single.getString("type");
 
             if (type.equals("Plain")) sb.append(msg_Single.getString("text"));
+            if (type.equals("Face")) sb.append("[" + msg_Single.getString("name") + "]");
         }
         return sb.toString();
     }
@@ -140,7 +141,7 @@ public class JsonParse {
             JSONObject msgSingle = JSONObject.fromObject(o);
             String type = msgSingle.getString("type");
 
-            if (type.equals("Plain") && BOT.catch_text) {
+            if ((type.equals("Plain") || type.equals("Face") ) && BOT.catch_text) {
                 PlaceHolders.msg_Plain = msgSingle;
                 TextComponent plain_text = new TextComponent(getSender_Msg(msgSingle));
                 plain_text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
