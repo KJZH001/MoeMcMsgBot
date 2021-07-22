@@ -13,8 +13,6 @@ enable_Bot: false
 
 # 验证消息失效时间， 单位: 分钟
 time: 5
-# 多久才能请求一次验证
-delay: 1
 # 验证码位数
 codeLength: 6
 

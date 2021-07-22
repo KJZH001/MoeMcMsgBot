@@ -5,7 +5,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -15,6 +14,7 @@ import static me.ed333.easyBot.Client.isConnected;
 import static me.ed333.easyBot.utils.Messages.*;
 import static me.ed333.easyBot.BOT.*;
 import static me.ed333.easyBot.BotMain.*;
+import static me.ed333.easyBot.utils.Messages.DEBUG.info;
 
 public class CommandHandler implements CommandExecutor {
 
@@ -102,8 +102,8 @@ public class CommandHandler implements CommandExecutor {
                                     // 建立验证码自销任务
                                     new codeAutomaticallyExpires(p.getName()).runTaskLater(BotMain.getPlugin(BotMain.class), verifyTime*60*20);
 
-                                    printDEBUG(" send result: " + str);
-                                    printDEBUG( "codeMap: " + codeMap);
+                                    info(" send result: " + str);
+                                    info( "codeMap: " + codeMap);
                                 } else sender.sendMessage(getMsg("QQisBound", null));
 
                             } else sender.sendMessage(getMsg("InvalidArgs", null));
@@ -115,8 +115,8 @@ public class CommandHandler implements CommandExecutor {
                                     codeMap.remove(p.getName());
                                     verifyPlayers.remove(p.getName());
                                     boundData.save(INSTANCE.boundDataFile);
-                                    printDEBUG(codeMap.toString());
-                                    printDEBUG(verifyPlayers.toString());
+                                    info(codeMap.toString());
+                                    info(verifyPlayers.toString());
                                     sender.sendMessage(getMsg("verify_success",null));
                                 } else sender.sendMessage(getMsg("verifyCode_Err", null));
                             } else {

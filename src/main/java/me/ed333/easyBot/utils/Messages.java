@@ -36,9 +36,7 @@ public class Messages {
         BotMain.lang = YamlConfiguration.loadConfiguration(BotMain.INSTANCE.langFile);
     }
 
-    public static void printDEBUG(String txt) {
-        if (BotMain.cfg.getBoolean("DEBUG")) BotMain.INSTANCE.getLogger().info(txt);
-    }
+
 
     private static String replaceColor(String text) {
         return text.replace("&", "§");
@@ -46,5 +44,16 @@ public class Messages {
 
     protected static String hoverEvent_txt_replace( String txt) {
         return txt.replace("[", "").replace("]", "").replace(", ", "\n");
+    }
+
+    public static class DEBUG {
+        private static final boolean b = BotMain.cfg.getBoolean("DEBUG");
+        public static void info(String txt) {
+            if (b) BotMain.INSTANCE.getLogger().info(txt);
+        }
+
+        public static void warn(String txt) {
+            if (b) BotMain.INSTANCE.getLogger().warning(txt);
+        }
     }
 }

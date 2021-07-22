@@ -10,7 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import static me.ed333.easyBot.utils.HttpRequest.doGet;
 import static me.ed333.easyBot.utils.HttpRequest.doPost;
 import static me.ed333.easyBot.utils.Messages.getMsg;
-import static me.ed333.easyBot.utils.Messages.printDEBUG;
+import static me.ed333.easyBot.utils.Messages.DEBUG.info;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -21,6 +21,7 @@ public class BOT {
     private static final ConsoleCommandSender sender = Bukkit.getConsoleSender();
     private static Client client;
 
+    public static Double apiVer;
     public static String session;
     public static int codeLength = BotMain.cfg.getInt("codeLength");
     public static long botID = BotMain.cfg.getLong("botID");
@@ -39,10 +40,10 @@ public class BOT {
     // k: player name  v: QQ
     public static HashMap<String, Long> verifyPlayers = new HashMap<>();
 
-    public static double get_apiVer() {
+    private static void apiVer() {
         JSONObject version = JSONObject.fromObject(doGet("http://" + url + "//about", null)).getJSONObject("data");
         String[] versionSpil = version.getString("version").split("\\.");
-        return Double.parseDouble(versionSpil[0]);
+        apiVer = Double.parseDouble(versionSpil[0]);
     }
 
     /**
@@ -54,7 +55,7 @@ public class BOT {
         sender.sendMessage("§3BOT: §a链接服务器中...");
         URI uri_api_1 = new URI("ws://" + url + "/all?sessionKey=" + session);
         URI uri_api_2 = new URI("ws://" + url + "/all?verifyKey=" + Key + "&qq=" + botID);
-        if (get_apiVer() < 2.0) client = new Client(uri_api_1);
+        if (apiVer < 2.0) client = new Client(uri_api_1);
         else client = new Client(uri_api_2);
         client.connect();
     }
@@ -63,15 +64,16 @@ public class BOT {
      * 初始化 Bot
      */
     public static void initializeBot() throws Exception {
+        apiVer();
         JSONObject authResult = JSONObject.fromObject(auth());
         if (authResult.getInt("code") == 0) {
             sender.sendMessage("§3BOT: §a验证身份成功!");
-            printDEBUG("result: " + authResult);
+            info("result: " + authResult);
             session = authResult.getString("session");
             JSONObject verifyResult = JSONObject.fromObject(verify(session));
             if (verifyResult.getInt("code") == 0) {
                 sender.sendMessage("§3BOT: §a绑定成功!");
-                printDEBUG("result: " + verifyResult);
+                info("result: " + verifyResult);
                 connect(session);
             } else sender.sendMessage("§3BOT: §c绑定失败！返回结果: §7" + verifyResult);
         } else sender.sendMessage("§3BOT: §c验证失败！返回结果: " + authResult);
@@ -101,7 +103,7 @@ public class BOT {
         JSONObject result = JSONObject.fromObject(release_Session(session));
         if (result.getInt("code") == 0) {
             sender.sendMessage("§3BOT: §a释放完成");
-            printDEBUG("result: " + result);
+            info("result: " + result);
         } else {
             sender.sendMessage("§3BOT: §c释放失败！服务器返回结果: " + result);
         }
@@ -114,7 +116,7 @@ public class BOT {
      */
     public static String auth() throws Exception {
         sender.sendMessage("§3BOT: §a注册bot...");
-        if (get_apiVer() < 2.0 ) return doPost("http://" + url + "/auth", new JSONObject().element("authKey", Key));
+        if (apiVer < 2.0 ) return doPost("http://" + url + "/auth", new JSONObject().element("authKey", Key));
         else return doPost("http://" + url + "/verify", new JSONObject().element("verifyKey", Key));
     }
 
@@ -126,7 +128,7 @@ public class BOT {
      */
     public static String verify(String SessionKey) throws Exception {
         sender.sendMessage("§3BOT: §a绑定BOT...");
-        if (get_apiVer() < 2.0) return doPost("http://" + url + "/verify", new JSONObject().element("sessionKey", SessionKey).element("qq", botID));
+        if (apiVer < 2.0) return doPost("http://" + url + "/verify", new JSONObject().element("sessionKey", SessionKey).element("qq", botID));
         else return doPost("http://" + url + "/bind", new JSONObject().element("sessionKey", SessionKey).element("qq", botID));
     }
 
@@ -180,8 +182,8 @@ public class BOT {
                 .element("group", groupID)
                 .element("messageChain",msgChain.toString());
         if (quote) request.element("quote", code);
-        printDEBUG( qq + " | " + groupID + " | " + msgChain + " | " + session);
-        printDEBUG(request.toString());
+        info( qq + " | " + groupID + " | " + msgChain + " | " + session);
+        info(request.toString());
         return doPost("http://" + url + "/sendTempMessage", request);
     }
 
@@ -307,9 +309,9 @@ public class BOT {
         public void run() {
             codeMap.remove(playerName);
             verifyPlayers.remove(playerName);
-            printDEBUG(playerName + " 的验证码失效！");
-            printDEBUG(codeMap.toString());
-            printDEBUG(verifyPlayers.toString());
+            info(playerName + " 的验证码失效！");
+            info(codeMap.toString());
+            info(verifyPlayers.toString());
         }
     }
 }

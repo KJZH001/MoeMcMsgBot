@@ -4,8 +4,8 @@ import me.ed333.easyBot.BOT;
 import me.ed333.easyBot.BotMain;
 import me.ed333.easyBot.Client;
 import me.ed333.easyBot.events.bot.MessageEvent.GroupMessageReceiveEvent;
+import me.ed333.easyBot.events.bot.MessageEvent.GroupRecallEvent;
 import me.ed333.easyBot.utils.MessageChain;
-import me.ed333.easyBot.utils.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -14,6 +14,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+
+import static me.ed333.easyBot.utils.Messages.getMsg;
+import static me.ed333.easyBot.utils.Messages.DEBUG.info;
 
 /**
  * 插件默认监听的一些事件
@@ -31,7 +34,7 @@ public class ListeningEvent implements Listener {
         }
 
         BotMain.playerConfig.set(p.getUniqueId() + ".lastName", p.getName());
-        Messages.printDEBUG(BOT.enableBot_Players.toString());
+        info(BOT.enableBot_Players.toString());
     }
 
     @EventHandler
@@ -42,16 +45,10 @@ public class ListeningEvent implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) throws Exception {
         String msg = event.getMessage();
+        MessageChain chain = new MessageChain();
+        chain.addPlain(getMsg("groupFormat", event.getPlayer())).addPlain(msg);
         if (Client.isConnected) {
-            BOT.sendGroupMessage(
-                    BOT.groupID,
-                    false,
-                    0,
-                    new MessageChain()
-                            .addPlain(event.getPlayer().getName())
-                            .addPlain(":")
-                    .addPlain(msg)
-            );
+            BOT.sendGroupMessage(BOT.groupID, false, 0, chain);
         }
     }
 
@@ -70,5 +67,10 @@ public class ListeningEvent implements Listener {
             }
             sender.spigot().sendMessage(event.getMulti());
         }
+    }
+
+    @EventHandler
+    public void onRecall(GroupRecallEvent event) {
+        info(event.getMsgId().toString());
     }
 }

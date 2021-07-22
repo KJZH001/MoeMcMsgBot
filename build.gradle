@@ -4,7 +4,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "5.0.0"
 }
 
-double ver = 1.6
+double ver = 1.7
 group = 'me.ed333.easybot'
 version = ver
 

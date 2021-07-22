@@ -16,18 +16,25 @@ public class GroupEventHandle {
         switch (EventType) {
             case "MemberMuteEvent" :
                 manager.callEvent(new MemberMuteEvent(event_json));
+                break;
             case "MemberUnmuteEvent":
                 manager.callEvent(new MemberUnmuteEvent(event_json));
+                break;
             case "GroupNameChangeEvent" :
                 manager.callEvent(new GroupNameChangeEvent(event_json));
+                break;
             case "GroupEntranceAnnouncementChangeEvent":
                 manager.callEvent(new GroupEntranceAnnouncementChangeEvent(event_json));
+                break;
             case "GroupMuteAllEvent" :
                 manager.callEvent(new GroupMuteAllEvent(event_json));
+                break;
             case "MemberLeaveEventKick":
                 manager.callEvent(new MemberLeaveEventKick(event_json));
+                break;
             case "MemberLeaveEventQuit":
                 manager.callEvent(new MemberLeaveEventQuit(event_json));
+                break;
         }
     }
 }

@@ -3,13 +3,14 @@ package me.ed333.easyBot;
 import me.ed333.easyBot.events.bot.BotEventHandle;
 import me.ed333.easyBot.events.bot.GroupEventHandle;
 import me.ed333.easyBot.events.bot.MessageEventHandle;
-import me.ed333.easyBot.utils.Messages;
 import me.ed333.easyBot.utils.PlaceHolders;
 import net.sf.json.JSONObject;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+
+import static me.ed333.easyBot.utils.Messages.DEBUG.info;
 
 import java.net.URI;
 
@@ -27,8 +28,9 @@ public class Client extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         JSONObject msg_json = JSONObject.fromObject(message);
-        if (BOT.get_apiVer() >= 2.0) msg_json = msg_json.getJSONObject("data");
-        Messages.printDEBUG(msg_json.toString());
+        if (BOT.apiVer >= 2.0) msg_json = msg_json.getJSONObject("data");
+        info("v2: " + msg_json.toString());
+        info("raw: " + message);
         PlaceHolders.recvMsg_json = msg_json;
         new BotEventHandle(msg_json);
         new GroupEventHandle(msg_json);

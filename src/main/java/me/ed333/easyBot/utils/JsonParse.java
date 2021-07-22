@@ -10,7 +10,6 @@ import net.sf.json.JSONObject;
 
 import static me.ed333.easyBot.utils.Messages.getMsg;
 import static me.ed333.easyBot.utils.Messages.hoverEvent_txt_replace;
-
 public class JsonParse {
     /**
      * 通过接收到的 json 获取 msgChain

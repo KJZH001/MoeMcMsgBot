@@ -43,6 +43,7 @@ help:
   - '&b=---=---=---=---=---=---=---=---='
 
 text: '&7[&aQQ群&7] &7%txt_sender_gameName% 说: '
+groupFormat: "[%server_name%][%player_name%] 说: "
 
 unBound_QQ:
   text: '&7[&c未绑定的QQ&7]'

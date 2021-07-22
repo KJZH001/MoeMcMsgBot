@@ -50,6 +50,9 @@ public final class BotMain extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new ListeningEvent(), this);
             this.getCommand("bot").setExecutor(new CommandHandler());
 
+            /**
+             * 防止使用 reload 命令后启用bot的玩家接收不到消息
+             */
             Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();
             for (Player p : onlinePlayers) {
                 if (playerConfig.getBoolean(p.getUniqueId() + ".enable_Bot")) {

@@ -12,16 +12,21 @@ import org.bukkit.plugin.PluginManager;
 public class MessageEventHandle {
     public MessageEventHandle(JSONObject event_json) {
         String EventType = event_json.getString("type");
+        System.out.println("eventType: " + EventType);
         PluginManager manager = Bukkit.getServer().getPluginManager();
         switch (EventType) {
             case "FriendRecallEvent":
                 manager.callEvent(new FriendRecallEvent(event_json));
+                break;
             case "GroupRecallEvent":
                 manager.callEvent(new GroupRecallEvent(event_json));
+                break;
             case "GroupMessage":
                 manager.callEvent(new GroupMessageReceiveEvent(event_json));
+                break;
             case "TempMessage":
                 manager.callEvent(new TempMessageReceiveEvent(event_json));
+                break;
         }
     }
 }
