@@ -1,3 +1,17 @@
+#### 2021-7-23 EasyBot-1.7-Reloaded
++ 修复了某些事件触发时报错的BUG
++ 从根本上解决了消息复制两次的BUG
++ 当 `DEBUG` 选项打开时, 收到消息后不再输出非bot启用的群的消息
++ 支持了游戏转发到群时的自定义前缀, 请在 `lang.yml` 中修改 `groupFormat` 选项
++ 添加了papi变量: 
+    - `%txt_sendTime%` 表示消息发送的时间戳
+    - `%txt_sendTime_formatted%` 表示消息发送时间，时间格式可在 `config.yml` 中设置: `timeFormat: yyyy.MM.dd HH:mm:ss`
+    - `%txt_faceName%` 表示 `face` 表情名称
+    - `%txt_faceID%` 表示 `face` 表情的 id
++ 事件更加完善，添加了`发送群聊消息` `发送临时消息` 以及 `发送好友消息` 的方法
++ 消息获取类型新增 `表情消息` 和 `@全体成员`
++ 尝试避免BUG: [游戏内发送消息时过段时间才能看到](README.md#游戏内发送消息时过段时间才能看到)
+
 #### 2021-7-20 EasyBot-1.6-Reloaded
 + 适配了 `mirai-api-http` 2.0
 + `config.yml` 中的 `authKey` 选项 改为了 `Key`
@@ -7,6 +21,8 @@
 + 不再提供更新检查
 + 新的未知的BUG(doge)
 + 抛弃了直接给bot发送任意消息的验证方式, 改用了验证码验证
+
+---
 
 #### 2021-4-3 EasyBot-1.4
 + 修复了 1.3-BETA 版本在1.13及以上服务器报错的BUG
@@ -22,6 +38,7 @@
 + 修复了游戏内执行重载命令后来自QQ的消息会复制双份的bug
 + 添加了 DEBUG 配置项目
 + 添加了 receive_type 配置
+
 ```yaml
 # 接收类型
 # event 为只接收 bot 的事件
@@ -34,6 +51,7 @@ receive_type: message
 # 否则只会增多无用的日志输出！
 DEBUG: false
 ```
+
 + 更新了事件(部分)
 + 更新了一个向群里发送纯文本消息的api
 + 更新了新的未知的BUG(doge）

@@ -43,6 +43,7 @@ public class CommandHandler implements CommandExecutor {
                                 initializeBot();
                             } else close();
 
+                            if (hasPAPI) new PlaceHolders().register();
                         } else sender.sendMessage(getMsg("permissionDeny", null));
 // /bot on
                     } else if (args[0].equalsIgnoreCase("on")) {

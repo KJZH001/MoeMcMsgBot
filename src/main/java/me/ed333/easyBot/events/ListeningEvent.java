@@ -4,7 +4,6 @@ import me.ed333.easyBot.BOT;
 import me.ed333.easyBot.BotMain;
 import me.ed333.easyBot.Client;
 import me.ed333.easyBot.events.bot.MessageEvent.GroupMessageReceiveEvent;
-import me.ed333.easyBot.events.bot.MessageEvent.GroupRecallEvent;
 import me.ed333.easyBot.utils.MessageChain;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -14,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import static me.ed333.easyBot.utils.Messages.getMsg;
 import static me.ed333.easyBot.utils.Messages.DEBUG.info;
@@ -43,13 +43,23 @@ public class ListeningEvent implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) throws Exception {
-        String msg = event.getMessage();
-        MessageChain chain = new MessageChain();
-        chain.addPlain(getMsg("groupFormat", event.getPlayer())).addPlain(msg);
-        if (Client.isConnected) {
-            BOT.sendGroupMessage(BOT.groupID, false, 0, chain);
-        }
+    public void onChat(AsyncPlayerChatEvent event) {
+            String msg = event.getMessage();
+            MessageChain chain = new MessageChain();
+            chain.addPlain(getMsg("groupFormat", event.getPlayer())).addPlain(msg);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (Client.isConnected) {
+                        try {
+                            BOT.sendGroupMessage(BOT.groupID, false, 0, chain);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    cancel();
+                }
+            }.runTaskTimer(BotMain.getPlugin(BotMain.class), 0L, BOT.sendDelay);
     }
 
     @EventHandler
@@ -67,10 +77,5 @@ public class ListeningEvent implements Listener {
             }
             sender.spigot().sendMessage(event.getMulti());
         }
-    }
-
-    @EventHandler
-    public void onRecall(GroupRecallEvent event) {
-        info(event.getMsgId().toString());
     }
 }

@@ -1,6 +1,7 @@
 package me.ed333.easyBot.utils;
 
 import me.ed333.easyBot.BOT;
+import me.ed333.easyBot.PlaceHolders;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -12,21 +13,39 @@ import static me.ed333.easyBot.utils.Messages.getMsg;
 import static me.ed333.easyBot.utils.Messages.hoverEvent_txt_replace;
 public class JsonParse {
     /**
+     * 获取消息发送的时间戳
+     * @param source_json 位于 “messageChain” 中
+     * @return time Stamp
+     */
+    public Long getSend_timeStamp(JSONObject source_json) {
+        return source_json.getLong("time");
+    }
+
+    /**
+     * 获取表情名字
+     * @param face_json 位于 "messageChain" 中
+     * @return face json
+     */
+    public String getFaceName(JSONObject face_json) {
+        return face_json.getString("name");
+    }
+
+    /**
+     * 获取表情ID
+     * @param face_json 位于 "messageChain" 中
+     * @return face id
+     */
+    public int getFaceId(JSONObject face_json) {
+        return face_json.getInt("faceId");
+    }
+
+    /**
      * 通过接收到的 json 获取 msgChain
      * @param msg_json 接收到的JSON
      * @return msgChain
      */
     public JSONArray get_msgChainArray(JSONObject msg_json) {
         return msg_json.getJSONArray("messageChain");
-    }
-
-    /**
-     * 通过接收到的 json 获取 msgType
-     * @param msg_Json 接收到的JSON
-     * @return msg Type
-     */
-    public String getMsgType(JSONObject msg_Json) {
-        return msg_Json.getString("type");
     }
 
     /**
@@ -139,9 +158,11 @@ public class JsonParse {
             JSONObject msgSingle = JSONObject.fromObject(o);
             String type = msgSingle.getString("type");
 
+            if (type.equals("Source")) PlaceHolders.msg_Source = msgSingle;
+
             if (type.equals("Plain") && BOT.catch_text) {
                 PlaceHolders.msg_Plain = msgSingle;
-                TextComponent plain_text = new TextComponent(getSender_Msg(msgSingle));
+                TextComponent plain_text = new TextComponent(getSender_Msg(msgSingle).replace("\n", ""));
                 plain_text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder(
                                 hoverEvent_txt_replace(getMsg("Plain.hoverEvent", null))
@@ -168,6 +189,26 @@ public class JsonParse {
                                 hoverEvent_txt_replace(getMsg("At.hoverEvent",null))
                         ).create()));
                 txt.addExtra(at_txt);
+            }
+
+            if (type.equals("AtAll") && BOT.catch_atAll) {
+                PlaceHolders.msg_atAll = msgSingle;
+                TextComponent atAll = new TextComponent(getMsg("atAll.text", null));
+                atAll.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                        new ComponentBuilder(
+                                hoverEvent_txt_replace(getMsg("atAll.hoverEvent", null))
+                        ).create()));
+                txt.addExtra(atAll);
+            }
+
+            if (type.equals("Face") && BOT.catch_face) {
+                PlaceHolders.msg_Face = msgSingle;
+                TextComponent face = new TextComponent(getMsg("Face.text", null));
+                face.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                        new ComponentBuilder(
+                            hoverEvent_txt_replace(getMsg("Face.hoverEvent", null))
+                        ).create()));
+                txt.addExtra(face);
             }
         }
         return txt;

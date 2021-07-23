@@ -19,6 +19,10 @@
 + [PlaceholderAPI](#PlaceholderAPI)
 + [多服兼容教程](#多服兼容教程)
 + [常见问题](#常见问题)
+    - [关于滑块验证(重要)](#关于滑块验证)
+    - [消息无法转发](#消息无法转发)
+    - [加载插件时会报错](#加载插件时会报错)
+    - [游戏内发送消息时过段时间才能看到](#游戏内发送消息时过段时间才能看到)
 
 ### mirai机器人部署
 + #### 前期准备
@@ -68,7 +72,9 @@ adapterSettings: {
     port: 8080
 }
 ```
-到这里 Mirai 机器人的配置就完毕了!  现在你只需要运行 MCL 让它在后台挂着就好。
+到这里 Mirai 机器人的配置就完毕了!  </br> 
+现在你只需要运行 MCL 并且登录你的机器人账号，然后让它在后台挂着就好。<br/>
+登陆指令为 `login <账号> <密码>`， 在控制台输入
 
 ### 插件设置
 + 插件丢进服务端的 plugins 文件夹, 启动一次来生成配置
@@ -121,22 +127,33 @@ bot.debug 调试输出信息
 + config.yml
 
 ```yaml
+# EasyBot Version: EasyBot-1.7
 # 确保 mirai 安装了 mirai-api-http
 
 # api-http 的地址
 host: localhost:8080
 # api-http 中的 authKey 用于验证身份
-# EasyBot 1.6 及以上配置项名称修改为 Key
-authKey: 123456
+Key: 123456
 # bot 的QQ
 botID: 123456789
 # bot 默认启用的群号
 groupID: 987654321
 # 启用bot
-enable-bot: false
+enable_Bot: false
+
+# 游戏消息转发到群里的间隔
+# 防止莫名其妙的转发不了游戏内的消息
+# 单位为 tick, 每 20tick 为 1s
+sendDelay: 10
 
 # 验证消息失效时间， 单位: 分钟
 time: 5
+# 验证码位数
+codeLength: 6
+
+# 时间格式
+# 用于展示群消息发送时间
+timeFormat: yyyy.MM.dd HH:mm:ss
 
 # QQ号的正则表达式， 用于绑定时检测有没有输入正确的QQ号
 regex: '[1-9][0-9]{8,10}'
@@ -162,6 +179,12 @@ catch:
   img: true
   # 抓取at消息
   at: true
+  # 抓取 [@全体成员]
+  atAll: true
+  # 抓取face表情
+  face: true
+
+
 ```
 
 ### PlaceholderAPI
@@ -189,10 +212,29 @@ catch:
 groupID: 123456789
 ```
 
-## 常见问题
+### 常见问题
 
--  <font color="#00dd00">游戏里的消息转发不到群里 或者 群里的消息转发不到游戏里</font><br/>
-检查一下bot后台是否还在线， 如果在线的话请帖内或者群里反馈(附加 /bot debug 输出的内容)
+- #### **关于滑块验证**
 
-- <font color="#00dd00">1.5 以后的版本并且搭载 mirai-api-http 2.0 启用插件时会报错 `JSONObject["type"] not found.`</font><br/>
-这是一个无法修复的 BUG，不过总体对插件的影响不大，不影响其功能的正常使用
+    - 请使用工具(手机app): [[滑动验证助手(Github地址)]](https://github.com/mzdluo123/TxCaptchaHelper) <br/>
+      考虑到部分用户无法正常访问Github， 故贴上[[网盘]](https://wwr.lanzoui.com/ivUoirq79yd) ，密码:5cyj<br/>
+      有条件的还是尽量选择 Github 并给个 Star 吧，这也是对作者的一份支持嘛(也别忘了我啊[doge])
+
+- #### **消息无法转发**
+    - 检查机器人账号是否登录
+    - 检查本插件配置中的 `Key` 是否填写正确
+    - 检查本插件配置中的 `host` 是否填写正确
+    - 检查本插件配置中的 `groupID` 是填写否正确
+    - 检查本插件配置中的 `enable_Bot` 是否为 `true`
+    - 检查本插件配置中的 `botID` 是否为机器人登录的账号
+    - 检查一下bot后台是否还在线， 如果在线的话请帖内或者群里反馈(附加 /bot debug 输出的内容)
+
+- #### **加载插件时会报错**
+    - 其具体内容为 `JSONObject["type"] not found.`<br/>
+    且插件版本为 `EasyBot-1.5` 版本及以上，使用 `mirai-api-http 2.0`<br/>
+    这是一个无法修复的 BUG，不过总体对插件的影响不大，不影响其功能的正常使用，如果此报错内容并不是在加载插件时发生的，请将 `DEBUG` 信息连同报错内容一并反馈给作者, 
+    方式可通过开 `issue` 或者群内提问
+    
+- #### **游戏内发送消息时过段时间才能看到**
+    - 作者我也遇到过，经测试，这个很可能是机器人本身的问题。与本插件无关。<br/>
+    该问题出现在转发群消息的过程中，且发生此问题时游戏内消息无法转发到群中。经查阅 `issue` 于 `EasyBot-1.7` 尝试避免此BUG

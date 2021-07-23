@@ -1,11 +1,7 @@
 package me.ed333.easyBot;
 
 import me.ed333.easyBot.events.ListeningEvent;
-import me.ed333.easyBot.utils.HttpRequest;
 import me.ed333.easyBot.utils.Messages;
-import me.ed333.easyBot.utils.PlaceHolders;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -50,7 +46,7 @@ public final class BotMain extends JavaPlugin {
             Bukkit.getPluginManager().registerEvents(new ListeningEvent(), this);
             this.getCommand("bot").setExecutor(new CommandHandler());
 
-            /**
+            /*
              * 防止使用 reload 命令后启用bot的玩家接收不到消息
              */
             Collection<? extends Player> onlinePlayers = getServer().getOnlinePlayers();

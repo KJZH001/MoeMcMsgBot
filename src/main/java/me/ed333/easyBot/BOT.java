@@ -29,11 +29,17 @@ public class BOT {
     public static int verifyTime = BotMain.cfg.getInt("time");
     public static long groupID = BotMain.cfg.getLong("groupID");
     public static String Key = BotMain.cfg.getString("Key");
+    public static String timeFormat = BotMain.cfg.getString("timeFormat");
     public static boolean catch_at = BotMain.cfg.getBoolean("catch.at");
     public static boolean catch_img = BotMain.cfg.getBoolean("catch.img");
     public static boolean enableBot = BotMain.cfg.getBoolean("enable_Bot");
     public static boolean catch_text = BotMain.cfg.getBoolean("catch.text");
-    public static List<Player> enableBot_Players = new ArrayList<>();
+    public static boolean catch_atAll = BotMain.cfg.getBoolean("catch.atAll");
+    public static boolean catch_face = BotMain.cfg.getBoolean("catch.face");
+    public static long sendDelay = BotMain.cfg.getLong("sendDelay");
+
+    //2021-7-22 由 List 集合改为 Set 集合 防止了重复的可能
+    public static Set<Player> enableBot_Players = new HashSet<>();
 
     // k:player name   v: player verify code
     public static HashMap<String, Integer> codeMap = new HashMap<>();
@@ -206,7 +212,7 @@ public class BOT {
     /**
      * 获取群员的信息
      * @param memberID 群员的QQ
-     * @return result
+     * @return
      */
     public static String getMemberInfo(long memberID) {
         return doGet("http://" + url + "/memberInfo", "sessionKey=" + session + "&target=" + groupID + "&memberId=" + memberID);

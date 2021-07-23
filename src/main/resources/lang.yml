@@ -50,6 +50,7 @@ unBound_QQ:
   hoverEvent:
     - '发送者: %txt_sender_name%'
     - 'QQ: %txt_sender_qq%'
+    - '发送时间: %txt_sendTime_formatted%'
     - '这个QQ还没有绑定哦，暂时无法显示名称'
 
 Image:
@@ -57,6 +58,7 @@ Image:
   hoverEvent:
     - '发送者: %txt_sender_name%'
     - 'qq: %txt_sender_qq%'
+    - '发送时间: %txt_sendTime_formatted%'
     - 'imageID: %txt_image_id%'
     - 'imageUrl: %txt_image_url%'
     - '这是一张图片，点击它来打开'
@@ -65,11 +67,30 @@ At:
   text: '&7[&b@%txt_at_targetName%&7]'
   hoverEvent:
     - '发送者: %txt_sender_name%(%txt_sender_qq%)'
+    - '发送时间: %txt_sendTime_formatted%'
     - '被AT的人: %txt_at_targetName%(%txt_at_targetID%)'
-    - '  游戏名字: %txt_at_target_gameName%'
+    - '游戏名字: %txt_at_target_gameName%'
+
+atAll:
+  text: '&7[&b@全体成员&7]'
+  hoverEvent:
+    - '发送者: %txt_sender_name%(%txt_sender_qq%)'
+    - '游戏名字:%txt_sender_gameName%'
+    - '发送时间: %txt_sendTime_formatted%'
 
 Plain:
   hoverEvent:
     - '发送者: %txt_sender_name%'
     - '游戏名字: %txt_sender_gameName%'
     - 'QQ: %txt_sender_qq%'
+    - '发送时间: %txt_sendTime_formatted%'
+
+
+Face:
+  text: '&7[%txt_faceName%]'
+  hoverEvent:
+    - '发送者: %txt_sender_name%'
+    - '游戏名字: %txt_sender_gameName%'
+    - 'QQ: %txt_sender_qq%'
+    - '发送时间: %txt_sendTime_formatted%'
+    - 'faceID: %txt_faceID%'

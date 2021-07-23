@@ -11,10 +11,19 @@ groupID: 987654321
 # 启用bot
 enable_Bot: false
 
+# 游戏消息转发到群里的间隔
+# 防止莫名其妙的转发不了游戏内的消息
+# 单位为 tick, 每 20tick 为 1s
+sendDelay: 10
+
 # 验证消息失效时间， 单位: 分钟
 time: 5
 # 验证码位数
 codeLength: 6
+
+# 时间格式
+# 用于展示群消息发送时间
+timeFormat: yyyy.MM.dd HH:mm:ss
 
 # QQ号的正则表达式， 用于绑定时检测有没有输入正确的QQ号
 regex: '[1-9][0-9]{8,10}'
@@ -40,4 +49,8 @@ catch:
   img: true
   # 抓取at消息
   at: true
+  # 抓取 [@全体成员]
+  atAll: true
+  # 抓取face表情
+  face: true
 
