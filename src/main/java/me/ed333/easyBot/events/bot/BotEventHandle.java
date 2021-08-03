@@ -1,7 +1,7 @@
 package me.ed333.easyBot.events.bot;
 
+import com.alibaba.fastjson.JSON;
 import me.ed333.easyBot.events.bot.BotEvent.*;
-import net.sf.json.JSONObject;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
@@ -10,8 +10,8 @@ import org.bukkit.plugin.PluginManager;
  * <p>如果接收到了事件就触发对应事件</p>
  */
 public class BotEventHandle {
-    public BotEventHandle(JSONObject event_json) {
-        String EventType = event_json.getString("type");
+    public BotEventHandle(String event_json) {
+        String EventType = JSON.parseObject(event_json).getString("type");
         PluginManager manager = Bukkit.getServer().getPluginManager();
         switch (EventType) {
             case"BotOnlineEvent":
@@ -28,24 +28,6 @@ public class BotEventHandle {
                 break;
             case "BotReloginEvent":
                 manager.callEvent(new BotReloginEvent(event_json));
-                break;
-            case "BotGroupPermissionChangeEvent":
-                manager.callEvent(new BotGroupPermissionChangeEvent(event_json));
-                break;
-            case "BotMuteEvent":
-                manager.callEvent(new BotMuteEvent(event_json));
-                break;
-            case "BotUnmuteEvent":
-                manager.callEvent(new BotUnmuteEvent(event_json));
-                break;
-            case "BotJoinGroupEvent":
-                manager.callEvent(new BotJoinGroupEvent(event_json));
-                break;
-            case "BotLeaveEventActive":
-                manager.callEvent(new BotLeaveEventActive(event_json));
-                break;
-            case "BotLeaveEventKick":
-                manager.callEvent(new BotLeaveEventKick(event_json));
                 break;
         }
     }

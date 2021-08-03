@@ -1,6 +1,7 @@
 package me.ed333.easyBot.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.ed333.easyBot.BOT;
 import me.ed333.easyBot.BotMain;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -12,7 +13,6 @@ public class Messages {
 
     public static void initializeMsg() {
         Set<String> keys = BotMain.lang.getKeys(true);
-
         for (String key : keys) {
             msgMap.put(key, replaceColor(BotMain.lang.get(key).toString()));
         }
@@ -42,18 +42,19 @@ public class Messages {
         return text.replace("&", "§");
     }
 
-    protected static String hoverEvent_txt_replace( String txt) {
+    public static String hoverEvent_txt_replace( String txt) {
         return txt.replace("[", "").replace("]", "").replace(", ", "\n");
     }
 
     public static class DEBUG {
-        private static final boolean b = BotMain.cfg.getBoolean("DEBUG");
         public static void info(String txt) {
-            if (b) BotMain.INSTANCE.getLogger().info(txt);
+            if (BOT.DEBUG) {
+                BotMain.INSTANCE.getLogger().info(txt);
+            }
         }
 
-        public static void warn(String txt) {
-            if (b) BotMain.INSTANCE.getLogger().warning(txt);
-        }
+//        public static void warn(String txt) {
+//            if (BOT.DEBUG) BotMain.INSTANCE.getLogger().warning(txt);
+//        }
     }
 }

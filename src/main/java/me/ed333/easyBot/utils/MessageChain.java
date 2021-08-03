@@ -1,7 +1,11 @@
 package me.ed333.easyBot.utils;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+/**
+ * 创建一个 MessageChain
+ */
 public class MessageChain {
     private final JSONArray json = new JSONArray();
 
@@ -10,13 +14,18 @@ public class MessageChain {
         return json.toString();
     }
 
+    public Object[] toArray() { return json.toArray(); }
+
     /**
      * 添加一个文本消息
      * @param text 文本内容
      * @return MessageChain
      */
     public MessageChain addPlain(String text) {
-        this.json.element(new JSONObject().element("type", "Plain").element("text", text));
+        JSONObject plainTxt = new JSONObject();
+        plainTxt.put("type", "Plain");
+        plainTxt.put("text", text);
+        this.json.add(plainTxt);
         return this;
     }
 
@@ -29,7 +38,10 @@ public class MessageChain {
      * @return MessageChain
      */
     public MessageChain addImage(String ImageID) {
-        this.json.element(new JSONObject().element("type", "Image").element("ImageId", ImageID));
+        JSONObject imageTxt = new JSONObject();
+        imageTxt.put("type", "Image");
+        imageTxt.put("ImageId", ImageID);
+        this.json.add(imageTxt);
         return this;
     }
 
@@ -39,7 +51,10 @@ public class MessageChain {
      * @return MessageChain
      */
     public MessageChain addImageByUrl(String Url) {
-        this.json.element(new JSONObject().element("type", "Image").element("url", Url));
+        JSONObject imageTxt = new JSONObject();
+        imageTxt.put("type", "Image");
+        imageTxt.put("url", Url);
+        this.json.add(imageTxt);
         return this;
     }
 
@@ -49,7 +64,10 @@ public class MessageChain {
      * @return MessageChain
      */
     public MessageChain addAt(long QQ) {
-        this.json.element(new JSONObject().element("type", "At").element("target", QQ));
+        JSONObject atTxt = new JSONObject();
+        atTxt.put("type", "At");
+        atTxt.put("target", QQ);
+        this.json.add(atTxt);
         return this;
     }
 
@@ -58,7 +76,33 @@ public class MessageChain {
      * @return MessageChain
      */
     public MessageChain addAtAll() {
-        this.json.element(new JSONObject().element("type", "AtAll"));
+        JSONObject atAll = new JSONObject();
+        atAll.put("type", "AtAll");
+        this.json.add(atAll);
+        return this;
+    }
+
+    /**
+     * 通过表情 id 添加一个表情
+     * @param id 表情id
+     * @return message chain
+     */
+    public MessageChain addFace_byID(int id) {
+        JSONObject face = new JSONObject();
+        face.put("faceId", id);
+        this.json.add(face);
+        return this;
+    }
+
+    /**
+     * 通过表情的拼音添加一个表情
+     * @param name 表情拼音
+     * @return message chain
+     */
+    public MessageChain addFace_byName(String name) {
+        JSONObject face = new JSONObject();
+        face.put("faceId", name);
+        this.json.add(face);
         return this;
     }
 }

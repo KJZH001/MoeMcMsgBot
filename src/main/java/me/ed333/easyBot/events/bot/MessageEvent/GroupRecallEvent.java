@@ -1,42 +1,51 @@
 package me.ed333.easyBot.events.bot.MessageEvent;
 
-import me.ed333.easyBot.events.bot.TriggeredByOperator;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSON;
+import me.ed333.easyBot.utils.jsonParse.JSONOnGroupRecall;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 
 /**
- * <p>群消息撤回事件</p>
- * <p>有关获取操作者信息的方法</p>
- * @see TriggeredByOperator#getOperatorObj()
+ * 群消息撤回事件
  */
-public class GroupRecallEvent extends TriggeredByOperator {
-    private final JSONObject json;
+public class GroupRecallEvent extends Event {
+    public static JSONOnGroupRecall jsonParse;
+    public static JSONOnGroupRecall.groupData groupData;
+    public static JSONOnGroupRecall.operatorData operatorData;
+    private static final HandlerList handlers = new HandlerList();
 
-    public GroupRecallEvent(JSONObject json) {
-        super(json);
-        this.json = json;
+    public GroupRecallEvent(String json) {
+        jsonParse = JSON.parseObject(json, JSONOnGroupRecall.class);
+        groupData = JSON.parseObject(jsonParse.group.toString(), JSONOnGroupRecall.groupData.class);
+        operatorData = JSON.parseObject(jsonParse.operator.toString(), JSONOnGroupRecall.operatorData.class);
+
     }
 
-    /**
-     * 原消息发送者 Id
-     * @return qq number
-     */
-    public Long getAuthor_Id() {
-        return json.getLong("authorId");
+    @Override
+    public HandlerList getHandlers() {
+        return handlers;
     }
 
-    /**
-     * 原消息 messageId
-     * @return message Id
-     */
-    public Integer getMsgId() {
-        return json.getInt("messageId");
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
-    /**
-     * 原消息发送的时间
-     * @return Message time
-     */
-    public Integer getMsgTime() {
-        return json.getInt("time");
-    }
+    public Long getAuthor_Id() { return jsonParse.authorId; }
+
+    public int getMsgId() { return jsonParse.messageId; }
+
+    public long getGroupId() { return groupData.id; }
+
+    public String getGroupName() { return groupData.name; }
+
+    public long getOperatorId() { return operatorData.id; }
+
+    public String getMemberName() { return operatorData.memberName; }
+
+    public String getSpecialTitle() { return operatorData.specialTitle; }
+
+    public long getJoinTimestamp() { return operatorData.joinTimestamp; }
+
+    public long getLastSpeakTimestamp() { return operatorData.lastSpeakTimestamp; }
 }
+

@@ -1,11 +1,11 @@
 # 可用 papi 变量
 
 verify_text:
-  '尊敬的玩家 %player_name%,
-  你正在进行绑定验证,
-  你的验证码为: %1,
-  请在 %2 分钟内使用此验证码。
-  使用方法: /bot verify %1
+  '尊敬的玩家 %player_name%, \n
+  你正在进行绑定验证, \n
+  你的验证码为: %1, \n
+  请在 %2 分钟内使用此验证码。 \n
+  使用方法: /bot verify %1 \n
   如果这不是你的操作，请无视本条消息。'
 
 
@@ -25,8 +25,13 @@ player_enableBot: '&7&l[&a提示&7&l] &a你启用了 Bot!'
 player_disableBot: '&7&l[&a提示&7&l] &c你禁用了 Bot!'
 notInVerifying: '&7&l[&a提示&7&l] &c你没有要进行的验证！'
 QQisBound: '&7&l[&a提示&7&l] &c这个QQ已经绑定了！'
+NameIsBound: '&7&l[&a提示&7&l] &c你已经绑定了一个QQ了，无法再次绑定！'
 
 unKnowCmd: '&7&l[&a提示&7&l] &c未知的命令。请输入 "/bot help" 查看帮助。'
+
+text: '&7[&aQQ群&7] &7%txt_sender_gameName% 说: '
+groupFormat: "[%server_name%][%player_name%] 说: "
+BookFormat: '%txt_sender_name% §4§l>§c§l>§9§o'
 
 help:
   - '&b=---=---=---=---=---=---=---=---='
@@ -41,9 +46,6 @@ help:
   - '   &7- &f/bot bind <qq> 绑定qq到游戏帐户'
   - '   &7- &f/bot debug 即刻输出一些调试信息供作者参用'
   - '&b=---=---=---=---=---=---=---=---='
-
-text: '&7[&aQQ群&7] &7%txt_sender_gameName% 说: '
-groupFormat: "[%server_name%][%player_name%] 说: "
 
 unBound_QQ:
   text: '&7[&c未绑定的QQ&7]'
@@ -94,3 +96,11 @@ Face:
     - 'QQ: %txt_sender_qq%'
     - '发送时间: %txt_sendTime_formatted%'
     - 'faceID: %txt_faceID%'
+
+Forward:
+  text: '&7[转发消息&7]'
+  hoverEvent:
+    - '发送者: %txt_sender_name%'
+    - '游戏名字: %txt_sender_gameName%'
+    - 'QQ: %txt_sender_qq%'
+    - '发送时间: %txt_sendTime_formatted%'

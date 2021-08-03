@@ -1,7 +1,7 @@
 package me.ed333.easyBot;
 
+import com.alibaba.fastjson.JSONObject;
 import me.ed333.easyBot.utils.MessageChain;
-import net.sf.json.JSONObject;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -30,12 +30,16 @@ public class BOT {
     public static long groupID = BotMain.cfg.getLong("groupID");
     public static String Key = BotMain.cfg.getString("Key");
     public static String timeFormat = BotMain.cfg.getString("timeFormat");
-    public static boolean catch_at = BotMain.cfg.getBoolean("catch.at");
-    public static boolean catch_img = BotMain.cfg.getBoolean("catch.img");
+
+    public static boolean DEBUG = BotMain.cfg.getBoolean("DEBUG");
+
     public static boolean enableBot = BotMain.cfg.getBoolean("enable_Bot");
-    public static boolean catch_text = BotMain.cfg.getBoolean("catch.text");
-    public static boolean catch_atAll = BotMain.cfg.getBoolean("catch.atAll");
-    public static boolean catch_face = BotMain.cfg.getBoolean("catch.face");
+    public static boolean isCatch_at = BotMain.cfg.getBoolean("catch.at");
+    public static boolean isCatch_img = BotMain.cfg.getBoolean("catch.img");
+    public static boolean isCatch_text = BotMain.cfg.getBoolean("catch.text");
+    public static boolean isCatch_atAll = BotMain.cfg.getBoolean("catch.atAll");
+    public static boolean isCatch_face = BotMain.cfg.getBoolean("catch.face");
+    public static boolean isCatch_forward = BotMain.cfg.getBoolean("catch.forward");
     public static long sendDelay = BotMain.cfg.getLong("sendDelay");
 
     //2021-7-22 由 List 集合改为 Set 集合 防止了重复的可能
@@ -47,7 +51,7 @@ public class BOT {
     public static HashMap<String, Long> verifyPlayers = new HashMap<>();
 
     private static void apiVer() {
-        JSONObject version = JSONObject.fromObject(doGet("http://" + url + "//about", null)).getJSONObject("data");
+        JSONObject version = JSONObject.parseObject(doGet("http://" + url + "/about", null)).getJSONObject("data");
         String[] versionSpil = version.getString("version").split("\\.");
         apiVer = Double.parseDouble(versionSpil[0]);
     }
@@ -63,6 +67,7 @@ public class BOT {
         URI uri_api_2 = new URI("ws://" + url + "/all?verifyKey=" + Key + "&qq=" + botID);
         if (apiVer < 2.0) client = new Client(uri_api_1);
         else client = new Client(uri_api_2);
+        info("BOT_[DEBUG_INFO] Action: Connect Socket, api-http: " + apiVer);
         client.connect();
     }
 
@@ -71,15 +76,13 @@ public class BOT {
      */
     public static void initializeBot() throws Exception {
         apiVer();
-        JSONObject authResult = JSONObject.fromObject(auth());
-        if (authResult.getInt("code") == 0) {
+        JSONObject authResult = JSONObject.parseObject(auth());
+        if (authResult.getInteger("code") == 0) {
             sender.sendMessage("§3BOT: §a验证身份成功!");
-            info("result: " + authResult);
             session = authResult.getString("session");
-            JSONObject verifyResult = JSONObject.fromObject(verify(session));
-            if (verifyResult.getInt("code") == 0) {
+            JSONObject verifyResult = JSONObject.parseObject(verify());
+            if (verifyResult.getInteger("code") == 0) {
                 sender.sendMessage("§3BOT: §a绑定成功!");
-                info("result: " + verifyResult);
                 connect(session);
             } else sender.sendMessage("§3BOT: §c绑定失败！返回结果: §7" + verifyResult);
         } else sender.sendMessage("§3BOT: §c验证失败！返回结果: " + authResult);
@@ -103,13 +106,13 @@ public class BOT {
     /**
      * 断开连接
      */
-    public static void close() throws Exception {
+    public static void close() {
         client.close();
         sender.sendMessage("§3BOT: §a释放session...");
-        JSONObject result = JSONObject.fromObject(release_Session(session));
-        if (result.getInt("code") == 0) {
+        JSONObject result = JSONObject.parseObject(release_Session(session));
+        if (result.getInteger("code") == 0) {
             sender.sendMessage("§3BOT: §a释放完成");
-            info("result: " + result);
+            info("BOT_[DEBUG_INFO] Action: Close socket client, api-http: " + apiVer + ", result ->" + result);
         } else {
             sender.sendMessage("§3BOT: §c释放失败！服务器返回结果: " + result);
         }
@@ -118,24 +121,38 @@ public class BOT {
     /**
      * 验证身份
      * @return result
-     * @throws Exception 请求异常时抛出
      */
-    public static String auth() throws Exception {
+    public static String auth() {
         sender.sendMessage("§3BOT: §a注册bot...");
-        if (apiVer < 2.0 ) return doPost("http://" + url + "/auth", new JSONObject().element("authKey", Key));
-        else return doPost("http://" + url + "/verify", new JSONObject().element("verifyKey", Key));
+        JSONObject request = new JSONObject();
+        String result;
+        String url_v1 = "http://" + url + "/auth";
+        String url_v2 = "http://" + url + "/verify";
+        if (apiVer < 2.0 ) {
+            request.put("authKey", Key);
+            result = doPost(url_v1, request);
+        } else {
+            request.put("verifyKey", Key);
+            result = doPost(url_v2, request);
+        }
+        info("BOT_[DEBUG_INFO] Action: AuthBot, api-http: " + apiVer +", request ->" + request + ", result ->" + result);
+        return result;
     }
 
     /**
      * 校验 Session 并将 Session 绑定到BotQQ
-     * @param SessionKey session
      * @return result String
-     * @throws Exception 请求异常时抛出
      */
-    public static String verify(String SessionKey) throws Exception {
+    public static String verify() {
         sender.sendMessage("§3BOT: §a绑定BOT...");
-        if (apiVer < 2.0) return doPost("http://" + url + "/verify", new JSONObject().element("sessionKey", SessionKey).element("qq", botID));
-        else return doPost("http://" + url + "/bind", new JSONObject().element("sessionKey", SessionKey).element("qq", botID));
+        String result;
+        JSONObject request = new JSONObject();
+        request.put("sessionKey", session);
+        request.put("qq", botID);
+        if (apiVer < 2.0) result = doPost("http://" + url + "/verify", request);
+        else result = doPost("http://" + url + "/bind", request);
+        info("BOT_[DEBUG_INFO] Action: Verify Session, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        return result;
     }
 
     /**
@@ -143,34 +160,40 @@ public class BOT {
      * 当bot断开连接时须释放session
      * @param sessionKey sessionKey
      * @return result
-     * @throws Exception 请求异常时抛出
      */
-    protected static String release_Session(String sessionKey) throws Exception {
-        JSONObject request = new JSONObject().element("sessionKey", sessionKey)
-                .element("qq", botID);
-        return doPost("http://" + url + "/release", request);
+    protected static String release_Session(String sessionKey) {
+        JSONObject request = new JSONObject();
+        String result;
+        request.put("sessionKey", sessionKey);
+        request.put("qq", botID);
+        result = doPost("http://" + url + "/release", request);
+        info("BOT_[DEBUG_INFO] Action: Release session, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        return result;
     }
 
 //                                                            //
 //  depart =========================================== depart //
 //                                                            //
 
-    /**
-     * 发送好友消息
-     * @param target 好友ID
-     * @param quote 启用引用
-     * @param code 如果引用启用， msg 的 SourceID
-     * @param msgChain 要发送的消息
-     * @return result
-     * @throws Exception 请求异常时抛出
-     */
-    public static String sendFriendMessage(long target, boolean quote, int code, MessageChain msgChain) throws Exception {
-        JSONObject request = new JSONObject().element("sessionKey", session)
-                .element("target", target)
-                .element("messageChain", msgChain.toString());
-        if (quote) request.element("quote", code);
-        return doPost("http://" + url + "/sendFriendMessage", request);
-    }
+//    /**
+//     * 发送好友消息
+//     * @param target 好友ID
+//     * @param quote 启用引用
+//     * @param code 如果引用启用， msg 的 SourceID
+//     * @param msgChain 要发送的消息
+//     * @return result
+//     */
+//    public static String sendFriendMessage(long target, boolean quote, int code, MessageChain msgChain) {
+//        JSONObject request = new JSONObject();
+//        String result;
+//        request.put("sessionKey", session);
+//        request.put("target", target);
+//        request.put("messageChain", msgChain.toArray());
+//        if (quote) request.put("quote", code);
+//        result = doPost("http://" + url + "/sendFriendMessage", request);
+//        info("BOT_[DEBUG_INFO] Action: Send friend msg, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+//        return result;
+//    }
 
     /**
      * 通过群给某人发送临时消息
@@ -181,16 +204,17 @@ public class BOT {
      * @param msgChain 消息链
      * @return result
      */
-    public static String sendTempMessage(long qq, long groupID, boolean quote, int code, MessageChain msgChain) throws Exception {
+    public static String sendTempMessage(long qq, long groupID, boolean quote, int code, MessageChain msgChain) {
         JSONObject request = new JSONObject();
-        request.element("sessionKey", session)
-                .element("qq", qq)
-                .element("group", groupID)
-                .element("messageChain",msgChain.toString());
-        if (quote) request.element("quote", code);
-        info( qq + " | " + groupID + " | " + msgChain + " | " + session);
-        info(request.toString());
-        return doPost("http://" + url + "/sendTempMessage", request);
+        String result;
+        request.put("sessionKey", session);
+        request.put("qq", qq);
+        request.put("group", groupID);
+        request.put("messageChain",msgChain.toArray());
+        if (quote) request.put("quote", code);
+        result = doPost("http://" + url + "/sendTempMessage", request);
+        info("BOT_[DEBUG_INFO] Action: Send temp msg, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        return result;
     }
 
     /**
@@ -201,21 +225,27 @@ public class BOT {
      * @param msgChain 消息链
      * @return result
      */
-    public static String sendGroupMessage(long groupID, boolean quote, int code, MessageChain msgChain) throws Exception {
-        JSONObject request = new JSONObject().element("sessionKey", session)
-                .element("target", groupID)
-                .element("messageChain", msgChain.toString());
-        if (quote) request.element("quote", code);
-        return doPost("http://" + url + "/sendGroupMessage", request);
+    public static String sendGroupMessage(long groupID, boolean quote, int code, MessageChain msgChain) {
+        JSONObject request = new JSONObject();
+        String result;
+        request.put("target", groupID);
+        request.put("sessionKey", session);
+        request.put("messageChain", msgChain.toArray());
+        if (quote) request.put("quote", code);
+        result = doPost("http://" + url + "/sendGroupMessage", request);
+        info("BOT_[DEBUG_INFO] Action: Send group msg, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        return result;
     }
 
     /**
      * 获取群员的信息
      * @param memberID 群员的QQ
-     * @return
+     * @return member info
      */
     public static String getMemberInfo(long memberID) {
-        return doGet("http://" + url + "/memberInfo", "sessionKey=" + session + "&target=" + groupID + "&memberId=" + memberID);
+        String result = doGet("http://" + url + "/memberInfo", "sessionKey=" + session + "&target=" + groupID + "&memberId=" + memberID);
+        info("BOT_[DEBUG_INFO] Action: Get member info, api-http: " + apiVer + ", result ->" + result);
+        return result;
     }
 
 
@@ -223,12 +253,15 @@ public class BOT {
      * 撤回消息
      * @param SourceID 消息的ID
      * @return result
-     * @throws Exception 请求异常时抛出
      */
-    public static String recall(int SourceID) throws Exception {
-        JSONObject request = new JSONObject().element("sessionKey", session)
-                .element("target", SourceID);
-        return doPost("http://" + url + "/recall", request);
+    public static String recall(int SourceID) {
+        JSONObject request = new JSONObject();
+        String result;
+        request.put("sessionKey", session);
+        request.put("target", SourceID);
+        result = doPost("http://" + url + "/recall", request);
+        info("BOT_[DEBUG_INFO] Action: Recall, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        return result;
     }
 
     /**
@@ -237,22 +270,30 @@ public class BOT {
      * @param time 时间 单位: 秒
      * @return result
      */
-    public static String mute(long groupID, long memberID, int time) throws Exception {
-        JSONObject request = new JSONObject().element("sessionKey", session)
-                .element("target", groupID)
-                .element("memberID", memberID)
-                .element("time", time);
-        return doPost("http://" + url + "/mute", request);
+    public static String mute(long groupID, long memberID, int time) {
+        JSONObject request = new JSONObject();
+        String result;
+        request.put("sessionKey", session);
+        request.put("target", groupID);
+        request.put("memberID", memberID);
+        request.put("time", time);
+        result = doPost("http://" + url + "/mute", request);
+        info("BOT_[DEBUG_INFO] Action: Mute, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        return result;
     }
 
     /**
      * 解除禁言
      */
-    public static String unmute(long groupID, long memberID) throws Exception {
-        JSONObject request = new JSONObject().element("sessionKey", session)
-                .element("target", groupID)
-                .element("memberID", memberID);
-        return doPost("http://" + url + "/unmute", request);
+    public static String unmute(long groupID, long memberID) {
+        JSONObject request = new JSONObject();
+        String result;
+        request.put("sessionKey", session);
+        request.put("target", groupID);
+        request.put("memberID", memberID);
+        result = doPost("http://" + url + "/unmute", request);
+        info("BOT_[DEBUG_INFO] Action: Unmute, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        return result;
     }
 
     /**
@@ -260,12 +301,16 @@ public class BOT {
      * @param reason 原因
      * @return result
      */
-    public static String kick(long groupID, long memberID, String reason) throws Exception {
-        JSONObject request = new JSONObject().element("sessionKey", session)
-                .element("target", groupID)
-                .element("memberID", memberID)
-                .element("msg", reason);
-        return doPost("http://" + url + "/kick", request);
+    public static String kick(long groupID, long memberID, String reason) {
+        JSONObject request = new JSONObject();
+        String result;
+        request.put("sessionKey", session);
+        request.put("target", groupID);
+        request.put("memberID", memberID);
+        request.put("msg", reason);
+        result = doPost("http://" + url + "/kick", request);
+        info("BOT_[DEBUG_INFO] Action: Kick, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        return result;
     }
 
 //                                                            //
@@ -279,11 +324,7 @@ public class BOT {
     一个返回了 null
      */
     public static String get_gameName_byQQ(long qq) {
-        return qq_isBound(qq) ? getMsg("unBound_QQ.text", null) : BotMain.boundData.getString("QQ_Bound." + qq);
-    }
-
-    public static String get_gameName_null(long qq) {
-        return qq_isBound(qq) ? null : BotMain.boundData.getString("QQ_Bound." + qq);
+        return qq_isBound(qq) ? BotMain.boundData.getString("QQ_Bound." + qq) : getMsg("unBound_QQ.text", null);
     }
 
     /*
@@ -291,7 +332,7 @@ public class BOT {
      */
     public static boolean qq_isBound(long qq) {
         Set<String> bound_qq = BotMain.boundData.getConfigurationSection("QQ_Bound").getKeys(false);
-        return !bound_qq.contains(String.valueOf(qq));
+        return bound_qq.contains(String.valueOf(qq));
     }
 
     /*
@@ -306,18 +347,16 @@ public class BOT {
     /**
      * 验证码自销
      */
-    static class codeAutomaticallyExpires extends BukkitRunnable {
+    public static class codeAutomaticallyExpires extends BukkitRunnable {
         private final String playerName;
         public codeAutomaticallyExpires(String name) {
             this.playerName = name;
         }
+
         @Override
         public void run() {
             codeMap.remove(playerName);
             verifyPlayers.remove(playerName);
-            info(playerName + " 的验证码失效！");
-            info(codeMap.toString());
-            info(verifyPlayers.toString());
         }
     }
 }

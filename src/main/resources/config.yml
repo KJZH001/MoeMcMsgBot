@@ -11,6 +11,14 @@ groupID: 987654321
 # 启用bot
 enable_Bot: false
 
+# 将转发消息保存到cache文件夹中
+# 此方法可以做到节约服务器运行内存
+# 但是会占用存储内存
+
+# 如果为 false，则服务器一关闭，所有转发消息将会被释放，并且下次启动时无法查看。
+# 如果为 true，则会将缓存消息存到本地，下次启动时依旧可以查看。
+saveCache: false
+
 # 游戏消息转发到群里的间隔
 # 防止莫名其妙的转发不了游戏内的消息
 # 单位为 tick, 每 20tick 为 1s
@@ -53,4 +61,6 @@ catch:
   atAll: true
   # 抓取face表情
   face: true
+  # 抓取转发消息
+  forward: true
 

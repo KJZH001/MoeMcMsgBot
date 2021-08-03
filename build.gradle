@@ -4,7 +4,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "5.0.0"
 }
 
-double ver = 1.7
+double ver = 1.8
 group = 'me.ed333.easybot'
 version = ver
 
@@ -18,9 +18,12 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.4.1'
     implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.1'
-    compile group: 'net.sf.json-lib', name: 'json-lib', version:'2.4', classifier:'jdk15'
+    compile 'xyz.upperlevel.spigot.book:spigot-book-api:1.5'
+    compile group:'com.alibaba', name: 'fastjson', version: '1.2.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+
+    compileOnly 'org.projectlombok:lombok:1.18.8'
     compileOnly 'org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.10.9'
 }

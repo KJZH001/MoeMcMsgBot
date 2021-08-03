@@ -1,57 +1,65 @@
 package me.ed333.easyBot;
 
+import com.alibaba.fastjson.JSON;
+
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.ed333.easyBot.utils.JsonParse;
-import me.ed333.easyBot.utils.Messages;
-import net.sf.json.JSONObject;
+import me.ed333.easyBot.events.bot.MessageEvent.GroupMessageReceiveEvent;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
 public class PlaceHolders extends PlaceholderExpansion {
-    public static JSONObject recvMsg_json;
-    public static JSONObject msg_Plain;
-    public static JSONObject msg_At;
-    public static JSONObject msg_Img;
-    public static JSONObject msg_Face;
-    public static JSONObject msg_atAll;
-    public static JSONObject msg_Source;
-    private final JsonParse parse = new JsonParse();
+    public static long at_target;
+    public static String imgId;
+    public static String imgUrl;
+
+    public static String faceName;
+    public static int faceId;
+
+    public static int messageId;
+    public static long messageTime;
+
+    public static String forward_name;
 
     @Override
     public String onPlaceholderRequest(Player player, String params) {
         switch (params) {
             case "sender_qq":
-                return parse.getSenderId(recvMsg_json).toString();
+                return String.valueOf(GroupMessageReceiveEvent.senderData.id);
             case "sender_name":
-                return parse.getSender_groupName(recvMsg_json);
+                return GroupMessageReceiveEvent.senderData.memberName;
             case "sender_gameName":
-                return BOT.get_gameName_byQQ(parse.getSenderId(recvMsg_json));
+                return BOT.get_gameName_byQQ(GroupMessageReceiveEvent.senderData.id);
             case "image_id":
-                return parse.getImg_id(msg_Img);
+                return imgId;
             case "image_url":
-                return parse.getImg_url(msg_Img);
+                return imgUrl;
             case "at_targetID":
-                return parse.getAt_targetID(msg_At).toString();
+                return String.valueOf(at_target);
             case "at_targetName":
-                if (BOT.apiVer < 2.0) return JSONObject.fromObject(BOT.getMemberInfo(parse.getAt_targetID(msg_At))).getString("name");
-                else return JSONObject.fromObject(BOT.getMemberInfo(parse.getAt_targetID(msg_At))).getString("memberName");
+                if (BOT.apiVer < 2.0) return JSON.parseObject(BOT.getMemberInfo(at_target)).getString("name");
+                else return JSON.parseObject(BOT.getMemberInfo(at_target)).getString("memberName");
             case "at_target_gameName":
-                return BOT.get_gameName_byQQ(parse.getAt_targetID(msg_At));
+                return BOT.get_gameName_byQQ(at_target);
             case "sendTime":
-                return String.valueOf(parse.getSend_timeStamp(recvMsg_json.getJSONArray("messageChain").getJSONObject(0)));
+                return String.valueOf(messageTime);
             case "sendTime_formatted":
-                return stampToDate(String.valueOf(parse.getSend_timeStamp(recvMsg_json.getJSONArray("messageChain").getJSONObject(0))));
+                return stampToDate(String.valueOf(messageTime));
             case "faceName":
-                return parse.getFaceName(msg_Face);
+                return faceName;
             case "faceID":
-                return String.valueOf(parse.getFaceId(msg_Face));
+                return String.valueOf(faceId);
             case "group":
                 return String.valueOf(BOT.groupID);
             case "botID":
                 return String.valueOf(BOT.botID);
+            case "msgId":
+                return String.valueOf(messageId);
+            case "forward_name":
+                return forward_name;
         }
         return null;
     }
@@ -60,15 +68,15 @@ public class PlaceHolders extends PlaceholderExpansion {
     public boolean canRegister() { return true; }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "txt";
     }
 
     @Override
-    public String getAuthor() { return "ed3"; }
+    public @NotNull String getAuthor() { return "ed3"; }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return "000";
     }
 

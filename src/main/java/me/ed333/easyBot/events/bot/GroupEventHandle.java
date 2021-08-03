@@ -1,7 +1,7 @@
 package me.ed333.easyBot.events.bot;
 
+import com.alibaba.fastjson.JSON;
 import me.ed333.easyBot.events.bot.GroupEvent.*;
-import net.sf.json.JSONObject;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
@@ -10,8 +10,8 @@ import org.bukkit.plugin.PluginManager;
  * <p>如果接收到了事件就触发对应事件</p>
  */
 public class GroupEventHandle {
-    public GroupEventHandle(JSONObject event_json) {
-        String EventType = event_json.getString("type");
+    public GroupEventHandle(String event_json) {
+        String EventType = JSON.parseObject(event_json).getString("type");
         PluginManager manager = Bukkit.getServer().getPluginManager();
         switch (EventType) {
             case "MemberMuteEvent" :
@@ -19,12 +19,6 @@ public class GroupEventHandle {
                 break;
             case "MemberUnmuteEvent":
                 manager.callEvent(new MemberUnmuteEvent(event_json));
-                break;
-            case "GroupNameChangeEvent" :
-                manager.callEvent(new GroupNameChangeEvent(event_json));
-                break;
-            case "GroupEntranceAnnouncementChangeEvent":
-                manager.callEvent(new GroupEntranceAnnouncementChangeEvent(event_json));
                 break;
             case "GroupMuteAllEvent" :
                 manager.callEvent(new GroupMuteAllEvent(event_json));

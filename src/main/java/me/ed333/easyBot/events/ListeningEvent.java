@@ -16,7 +16,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import static me.ed333.easyBot.utils.Messages.getMsg;
-import static me.ed333.easyBot.utils.Messages.DEBUG.info;
 
 /**
  * 插件默认监听的一些事件
@@ -34,7 +33,6 @@ public class ListeningEvent implements Listener {
         }
 
         BotMain.playerConfig.set(p.getUniqueId() + ".lastName", p.getName());
-        info(BOT.enableBot_Players.toString());
     }
 
     @EventHandler
@@ -65,17 +63,18 @@ public class ListeningEvent implements Listener {
     @EventHandler
     public void  onGroupMessage(GroupMessageReceiveEvent event) {
         ConsoleCommandSender sender = Bukkit.getConsoleSender();
-        if (event.getGroupId().equals(BOT.groupID)) {
+        if (event.getGroupId() == BOT.groupID) {
             String catchType = BotMain.cfg.getString("catch.type");
             for (Player p : BOT.enableBot_Players) {
                 if (catchType.equals("text") && BotMain.cfg.getBoolean("catch.text")) {
-                    sender.sendMessage(event.getMessage());
+                    sender.sendMessage(event.getRawText());
                 }
                 else if (catchType.equals("multi")) {
                     p.spigot().sendMessage(event.getMulti());
                 }
             }
-            sender.spigot().sendMessage(event.getMulti());
+            if (catchType.equals("multi")) sender.spigot().sendMessage(event.getMulti());
+            if (catchType.equals("text")) sender.sendMessage(event.getRawText());
         }
     }
 }

@@ -1,34 +1,40 @@
 package me.ed333.easyBot.events.bot.GroupEvent;
 
-import me.ed333.easyBot.events.bot.TriggeredByOperator;
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSON;
+import me.ed333.easyBot.events.bot.SendMsg;
+import me.ed333.easyBot.utils.jsonParse.JSONOnGroupMuteAll;
 
 /**
- * <p>全员禁言事件</p>
- * <p>有关获取操作者信息的方法</p>
- * @see TriggeredByOperator#getOperatorObj()
+ * 全员禁言事件
  */
-public class GroupMuteAllEvent extends TriggeredByOperator {
-    private final JSONObject json;
+public class GroupMuteAllEvent extends SendMsg {
+    public static JSONOnGroupMuteAll jsonParse;
+    public static JSONOnGroupMuteAll.GroupData groupData;
+    public static JSONOnGroupMuteAll.OperatorData operatorData;
 
-    public GroupMuteAllEvent(JSONObject json) {
-        super(json);
-        this.json = json;
+    public GroupMuteAllEvent(String json) {
+        jsonParse = JSON.parseObject(json, JSONOnGroupMuteAll.class);
+        groupData = JSON.parseObject(jsonParse.group.toString(), JSONOnGroupMuteAll.GroupData.class);
+        operatorData = JSON.parseObject(jsonParse.operator.toString(), JSONOnGroupMuteAll.OperatorData.class);
     }
 
-    /**
-     * 原本是否全员禁言
-     * @return State about mute all
-     */
-    public Boolean getOrigin_State() {
-        return json.getBoolean("origin");
-    }
+    public boolean getOriginStatus() { return jsonParse.origin; }
 
-    /**
-     * 现在是否全员禁言
-     * @return State about mute all
-     */
-    public Boolean getCurrent_State() {
-        return json.getBoolean("current");
-    }
+    public boolean getCurrentStatus() { return jsonParse.current; }
+
+    public long getGroupId() { return groupData.id; }
+
+    public String getGroupName() { return groupData.name; }
+
+    public long getOpId() { return operatorData.id; }
+
+    public String getOpName() { return operatorData.memberName; }
+
+    public String getOpSpecialTitle() { return  operatorData.SpecialTitle; }
+
+    public String getOpPerm() { return operatorData.permission; }
+
+    public long getOpJoinTime() { return operatorData.joinTimestamp; }
+
+    public long getOpLastSpeakTime() {return operatorData.lastSpeakTimestamp; }
 }

@@ -1,16 +1,16 @@
 package me.ed333.easyBot;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import me.ed333.easyBot.events.bot.BotEventHandle;
 import me.ed333.easyBot.events.bot.GroupEventHandle;
 import me.ed333.easyBot.events.bot.MessageEventHandle;
-import me.ed333.easyBot.utils.JsonParse;
-import net.sf.json.JSONObject;
+import me.ed333.easyBot.utils.Messages;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
-import static me.ed333.easyBot.utils.Messages.DEBUG.info;
 
 import java.net.URI;
 
@@ -27,13 +27,12 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onMessage(String message) {
-        JSONObject msg_json = JSONObject.fromObject(message);
+        JSONObject msg_json = JSON.parseObject(message);
         if (BOT.apiVer >= 2.0) msg_json = msg_json.getJSONObject("data");
-        if (BotMain.hasPAPI) PlaceHolders.recvMsg_json = msg_json;
-        if (new JsonParse().getGroupID(msg_json) == BOT.groupID) info(msg_json.toString());
-        new BotEventHandle(msg_json);
-        new GroupEventHandle(msg_json);
-        new MessageEventHandle(msg_json);
+        Messages.DEBUG.info("BOT_[DEBUG_INFO] onMessage: " + msg_json.toString());
+        new BotEventHandle(msg_json.toJSONString());
+        new GroupEventHandle(msg_json.toJSONString());
+        new MessageEventHandle(msg_json.toJSONString());
     }
 
     @Override

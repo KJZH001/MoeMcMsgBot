@@ -1,77 +1,66 @@
 package me.ed333.easyBot.events.bot.GroupEvent;
 
-import me.ed333.easyBot.events.bot.TriggeredByOperator;
-import net.sf.json.JSONObject;
-
+import com.alibaba.fastjson.JSON;
+import me.ed333.easyBot.events.bot.SendMsg;
+import me.ed333.easyBot.utils.jsonParse.JSONOnMemberEvent;
 
 /**
- * <p>群员被禁言事件（该成员不是Bot）</p>
- * <p>有关获取操作者信息的方法</p>
- * @see TriggeredByOperator#getOperatorObj()
+ *
  */
-public class MemberMuteEvent extends TriggeredByOperator {
-    private final JSONObject json;
-
-    public MemberMuteEvent(JSONObject json) {
-        super(json);
-        this.json = json;
+public class MemberMuteEvent extends SendMsg {
+    public static JSONOnMemberEvent jsonParse;
+    public static JSONOnMemberEvent.dData memberData;
+    public static JSONOnMemberEvent.dData operatorData;
+    public static JSONOnMemberEvent.dData.GroupData groupData;
+    public MemberMuteEvent(String json) {
+        jsonParse = JSON.parseObject(json, JSONOnMemberEvent.class);
+        memberData = JSON.parseObject(jsonParse.member.toString(), JSONOnMemberEvent.dData.class);
+        operatorData = JSON.parseObject(jsonParse.operator.toString(), JSONOnMemberEvent.dData.class);
+        groupData = JSON.parseObject(operatorData.group.toString(), JSONOnMemberEvent.dData.GroupData.class);
     }
 
-    /**
-     * 获取禁言时间 （秒）
-     * @return 禁言时间
-     */
-    public Long getDurationSeconds() {
-        return json.getLong("durationSeconds");
-    }
+    public long getGroupId() { return groupData.id; }
 
-    private JSONObject getMemberObj() {
-        return json.getJSONObject("member");
-    }
+    public String getGroupName() { return groupData.name; }
 
-    /**
-     * 获取被禁言群员的QQ
-     * @return Muted QQ number
-     */
-    public Long getMuteMember_Id() {
-        return getMemberObj().getLong("id");
-    }
+    /**禁言时间， 单位：秒*/
+    public int getDurationSeconds() { return jsonParse.durationSeconds; }
 
-    /**
-     * 获取被禁言群员的群名片
-     * @return Muted member name
-     */
-    public String getMuteMember_Name() {
-        return getMemberObj().getString("memberName");
-    }
+/*
+------------------------获取被禁言群员的有关信息
+*/
 
-    /**
-     * 获取被禁言群员群中的权限
-     * <p>ADMINISTRATOR</p>
-     * <p>MEMBER</p>
-     * @return Member permission
-     */
-    public String getMuteMember_Perm() {
-        return getMemberObj().getString("permission");
-    }
+    /**被禁言群员的id*/
+    public long getMemberId() { return memberData.id;}
 
-    private JSONObject getMember_groupObj() {
-        return getMemberObj().getJSONObject("group");
-    }
+    /**被禁言群员的群名片*/
+    public String getMemberName() { return memberData.memberName; }
 
-    /**
-     * 获取事件发生的群号
-     * @return groupId
-     */
-    public Long getGroupId() {
-        return getMember_groupObj().getLong("id");
-    }
+    /**被禁言群员的群头衔*/
+    public String getMemberSpecialTitle() { return memberData.SpecialTitle; }
 
-    /**
-     * 获取事件发生的群名称
-     * @return Group Name
-     */
-    public String getGroup_Name() {
-        return getMember_groupObj().getString("name");
-    }
+    /**被禁言群员的权限，分别是 OWNER、ADMINISTRATOR、MEMBER*/
+    public String getMemberPerm() { return memberData.permission; }
+
+    /**被禁言群员入群时间*/
+    public long getMemberJoinTime() { return memberData.joinTimestamp; }
+
+    /**被禁言群员上一次说话的时间*/
+    public long getMemberLastSpeakTime() { return memberData.lastSpeakTimestamp; }
+
+/*
+------------------------获取执行此操作的人有关信息
+*/
+
+    public long getOperatorId() { return operatorData.id;}
+
+    public String getOperatorName() { return operatorData.memberName; }
+
+    public String getOperatorSpecialTitle() { return operatorData.SpecialTitle; }
+
+    public String getOperatorPerm() { return operatorData.permission; }
+
+    public long getOperatorJoinTime() { return operatorData.joinTimestamp; }
+
+    public long getOperatorLastSpeakTime() { return operatorData.lastSpeakTimestamp; }
 }

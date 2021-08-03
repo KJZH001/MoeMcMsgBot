@@ -17,12 +17,15 @@ public final class BotMain extends JavaPlugin {
     
     public static BotMain INSTANCE;
     public BotMain() { INSTANCE = this; }
-    
+
+    public static String pluginVer;
+
     public final File dataFolder = getDataFolder();
-    public final File cfgFile = new File(dataFolder, "config.yml");
     public final File langFile = new File(dataFolder, "lang.yml");
+    public final File cfgFile = new File(dataFolder, "config.yml");
     public final File boundDataFile = new File(dataFolder, "boundData.yml");
     public final File playerConfigFile = new File(dataFolder, "playerConfig.yml");
+
 
     public static YamlConfiguration cfg = new YamlConfiguration();
     public static YamlConfiguration lang = new YamlConfiguration();
@@ -32,6 +35,7 @@ public final class BotMain extends JavaPlugin {
     public static boolean hasPAPI = false;
     @Override
     public void onEnable() {
+         pluginVer = getDescription().getVersion();
         try {
 
             if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
@@ -42,6 +46,7 @@ public final class BotMain extends JavaPlugin {
             checkFile();
             Messages.initializeMsg();
             if (BOT.enableBot) BOT.initializeBot();
+            else Bukkit.getConsoleSender().sendMessage("§3BOT: §eBOT已禁用");
 
             Bukkit.getPluginManager().registerEvents(new ListeningEvent(), this);
             this.getCommand("bot").setExecutor(new CommandHandler());
@@ -91,7 +96,7 @@ public final class BotMain extends JavaPlugin {
         }
 
         if (cfgFile.exists() || langFile.exists()) {
-            // 自定添加配置
+            // 添加自定义配置
             InputStream cfgStream_in = getResource("config.yml");
             YamlConfiguration resourceCfg = YamlConfiguration.loadConfiguration(new InputStreamReader(cfgStream_in));
             Set<String> resourceCfgKeys = resourceCfg.getKeys(true);
@@ -113,5 +118,24 @@ public final class BotMain extends JavaPlugin {
             cfg.save(cfgFile);
             lang.save(langFile);
         }
+    }
+    
+    public static void flushCfgVal() {
+        BOT.codeLength = cfg.getInt("codeLength");
+        BOT.botID = cfg.getLong("botID");
+        BOT.url = cfg.getString("host");
+        BOT.verifyTime = cfg.getInt("time");
+        BOT.groupID = cfg.getLong("groupID");
+        BOT.Key = cfg.getString("Key");
+        BOT.timeFormat = cfg.getString("timeFormat");
+        BOT.DEBUG = cfg.getBoolean("DEBUG");
+        BOT.enableBot = cfg.getBoolean("enable_Bot");
+        BOT.isCatch_at = cfg.getBoolean("catch.at");
+        BOT.isCatch_img = cfg.getBoolean("catch.img");
+        BOT.isCatch_text = cfg.getBoolean("catch.text");
+        BOT.isCatch_atAll = cfg.getBoolean("catch.atAll");
+        BOT.isCatch_face = cfg.getBoolean("catch.face");
+        BOT.isCatch_forward = cfg.getBoolean("catch.forward");
+        BOT.sendDelay = cfg.getLong("sendDelay");
     }
 }
