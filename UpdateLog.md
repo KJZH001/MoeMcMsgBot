@@ -1,4 +1,4 @@
-### EasyBot-1.8-Reloaded
+### 2021-8-3 EasyBot-1.8-Reloaded
 #### **此版本对内部代码改动较大，因此该版本往前的附属插件将不会正常工作**
 + 每次重载插件时对 `config` 的 value 进行刷新，防止了一些配置没法加载的BUG
 + 采用了 `fast-json` 作为本插件新的json解析工具
