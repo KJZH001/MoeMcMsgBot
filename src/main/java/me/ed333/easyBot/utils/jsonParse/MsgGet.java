@@ -122,7 +122,7 @@ public class MsgGet {
                             new ComponentBuilder(
                                     hoverEvent_txt_replace(getMsg("Forward.hoverEvent", null))
                             ).create()));
-                    forward.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bot open"));
+                    forward.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/bot book Book_" + PlaceHolders.messageId));
                     text.addExtra(forward);
                     // 建立一本书
                     BookCreator bc = new BookCreator(PlaceHolders.messageId);
