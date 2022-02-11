@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "5.0.0"
+}
+
+group 'me.ed333.easybot.plugin'
+
+repositories {
+    mavenCentral()
+}
+
+version '2.0.0-B1'
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        include 'plugin.yml', 'config.yml', 'lang.yml'
+        expand(
+                version: version,
+                desc: 'EasyBot-Plugin_api-http'
+        )
+    }
+}
+
+dependencies {
+    implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.5.1'
+}

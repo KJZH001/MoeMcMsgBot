@@ -1,0 +1,20 @@
+plugins {
+    id 'java'
+}
+
+group 'me.ed333.easybot.api.with_mirai_api_http'
+
+description 'EasyBot-API'
+
+task sourceJar(type:Jar) {
+    getArchiveClassifier().convention('sources')
+    from sourceSets.main.allSource
+}
+
+tasks.withType(Javadoc) {
+    options.encoding("UTF8")
+}
+
+dependencies {
+    implementation 'xyz.upperlevel.spigot.book:spigot-book-api:1.5'
+}

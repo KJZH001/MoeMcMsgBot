@@ -1,0 +1,3 @@
+rootProject.name = 'EasyBot-Plugin'
+
+include 'Plugin_withMirai-api-http'

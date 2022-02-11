@@ -1,0 +1,7 @@
+name: EasyBot_reloaded
+version: ${version}
+description: ${desc}
+main: me.ed333.easybot.plugin.with_mirai_api_http.Main
+api-version: 1.16
+commands:
+  bot:

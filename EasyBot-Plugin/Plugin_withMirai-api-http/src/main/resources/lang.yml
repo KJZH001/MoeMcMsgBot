@@ -1,0 +1,130 @@
+# 可用 papi 变量
+# 以下内容传入了玩家对象， 即可以获取只属于某一个玩家的变量
+# 比如 %player_name% 等等
+#########################################################
+#  verify_text   | player_enableBot | player_disableBot #
+# notInVerifying |    QQisBound     |    NameIsBound    #
+#  groupFormat   |                  |                   #
+#########################################################
+
+verify_text:
+  '尊敬的玩家 %player_name%, \n
+  你正在进行绑定验证, \n
+  你的验证码为: %1, \n
+  请在 %2 分钟内使用此验证码。 \n
+  使用方法: /bot verify %1 \n
+  如果这不是你的操作，请无视本条消息。'
+
+verify_success: '&7&l[&a提示&7&l] &a验证通过。'
+verifyCode_Err: '&7&l[&a提示&7&l] &c验证码错误。'
+verify_nonCode: '&7&l[&a提示&7&l] &c验证码格式不正确！'
+verify_nonVerifyPlayer: '&7&l[&a提示&7&l] &c你没有要进行的验证。'
+
+startReload: '&7&l[&a提示&7&l] &e重载中...'
+reload: '&7&l[&a提示&7&l] &a插件已重新加载！'
+InvalidArgs: '&7&l[&a提示&7&l] &c命令参数错误。请输入 "/bot help" 查看帮助。'
+nonQQ: '&7&l[&a提示&7&l] &cQQ号格式似乎不正确哦，请检查。'
+
+verify_msgSend: '&7&l[&a提示&7&l] &a已向你的QQ发送认证消息！'
+verify_coolingDown: '&7&l[&a提示&7&l] &c正在冷却中，请过一会儿再发送。'
+verify_qqNotFind: '&7&l[&a提示&7&l] &c该qq没有在任何一个转发群中被找到，请加入一个转发群: %txt_group_0%'
+
+QQisBound: '&7&l[&a提示&7&l] &c这个QQ已经绑定了！'
+
+playerCBErr: '&7&l[&a提示&7&l] &c您提供的原有的QQ错误！'
+newQQisBind: '&7&l[&a提示&7&l] &c您提供的新的QQ已经绑定另外一个角色。'
+sameQQ: '&7&l[&a提示&7&l] &e您提供的原有的QQ和新的QQ一致，操作已取消。'
+NameIsBound: '&7&l[&a提示&7&l] &c你已经绑定了一个QQ了，无法绑定多个！'
+playerIsNotBind: '&7&l[&a提示&7&l] &c您还没有绑定一个QQ，无法执行此操作。'
+playerBindChange: '&7&l[&a提示&7&l] &a更改绑定流程已完毕，请按照提示进行验证流程。'
+
+notPlayer: '&7&l[&a提示&7&l] &c你不是玩家！只有玩家才能执行此指令。'
+permissionDeny: '&7&l[&a提示&7&l] &c你没有权限！'
+
+player_enableBot: '&7&l[&a提示&7&l] &a你启用了 Bot！将会向你推送群内消息。'
+player_disableBot: '&7&l[&a提示&7&l] &c你禁用了 Bot！将不会向你推送群内消息。'
+
+unKnowCmd: '&7&l[&a提示&7&l] &c未知的命令。请输入 "/bot help" 查看帮助。'
+
+help:
+  - '&b=---=---=---=---=---=---=---=---='
+  - '&7${desc}-${version} 指令帮助:'
+  - '   &7- &a/bot help'
+  - '   &7- &a/bot init &8----- &6初始化bot'
+  - '   &7- &a/bot reload &8----- &6重载bot'
+  - '   &7- &a/bot enable &8----- &6开启自己的bot'
+  - '   &7- &a/bot disable &8----- &6关闭自己的bot'
+  - '   &7- &a/bot verify &a<code> &8----- &6验证身份'
+  - '   &7- &a/bot bind &a<qq> &8----- &6绑定qq到游戏帐户'
+  - '   &7- &a/bot migrate &8----- &6对 2.0 版本以下的数据进行迁移'
+  - '   &7- &a/bot bindChange|bc <之前绑定的qq> <新绑定的QQ> &8----- &6修改绑定的QQ'
+  - '&b=---=---=---=---=---=---=---=---='
+
+groupFormat: "[%player_name%] 说: "
+BoundQQ:
+  text: '&7[&aQQ群&7] &6%txt_senderGameName% &f> &e'
+  hoverEvent:
+    - '&c来自群%txt_senderGroupName%(%txt_senderGroupID%)'
+    - ''
+    - '&a点击这里回复 TA'
+
+unBoundQQ:
+  text: '&7[&aQQ群&7] &7[&c未绑定的QQ&7] &f> &e'
+  hoverEvent:
+    - '发送者: %txt_senderNick%'
+    - '来自群%txt_senderGroupName%(%txt_senderGroupID%)'
+    - 'QQ: %txt_senderQQ%'
+    - '发送时间: %txt_sendTimeF%'
+    - '这个QQ还没有绑定哦，暂时无法显示名称'
+    - ''
+    - '&a点击这里回复 TA'
+
+Image:
+  text: '&7[&a图片&7]'
+  hoverEvent:
+    - '发送者: %txt_senderNick%'
+    - 'qq: %txt_senderQQ%'
+    - '发送时间: %txt_sendTimeF%'
+    - 'imageID: %txt_imageID%'
+    - 'imageUrl: %txt_imageURL%'
+    - '这是一张图片，点击它来打开'
+
+At:
+  text: '&7[&b@%txt_atTargetNick%&7]'
+  hoverEvent:
+    - '发送者: %txt_senderNick%(%txt_senderQQ%)'
+    - '发送时间: %txt_sendTimeF%'
+    - '被AT的人: %txt_atTargetNick%(%txt_atTargetID%)'
+    - '游戏名字: %txt_atTargetGameName%'
+
+atAll:
+  text: '&7[&b@全体成员&7]'
+  hoverEvent:
+    - '发送者: %txt_senderNick%(%txt_senderQQ%)'
+    - '游戏名字:%txt_senderGameName%'
+    - '发送时间: %txt_sendTimeF%'
+
+Plain:
+  hoverEvent:
+    - '发送者: %txt_senderNick%'
+    - '游戏名字: %txt_senderGameName%'
+    - 'QQ: %txt_senderQQ%'
+    - '发送时间: %txt_sendTimeF%'
+
+
+Face:
+  text: '&7[%txt_faceName%]'
+  hoverEvent:
+    - '发送者: %txt_senderNick%'
+    - '游戏名字: %txt_senderGameName%'
+    - 'QQ: %txt_senderQQ%'
+    - '发送时间: %txt_sendTimeF%'
+    - 'faceID: %txt_faceID%'
+
+Forward:
+  text: '&7[转发消息&7]'
+  hoverEvent:
+    - '发送者: %txt_senderNick%'
+    - '游戏名字: %txt_senderGameName%'
+    - 'QQ: %txt_senderQQ%'
+    - '发送时间: %txt_sendTimeF%'

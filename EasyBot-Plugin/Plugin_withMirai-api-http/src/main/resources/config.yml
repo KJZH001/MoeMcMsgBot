@@ -1,0 +1,45 @@
+#=====+=====+=====+=====+=====+=====+=====+
+# ${desc}-${version}
+#
+# 确保 mirai 机器人安装了 mirai-api-http
+# 插件兼容 mirai-api-http 2.X 版本
+#=====+=====+=====+=====+=====+=====+=====+
+# DO NOT CHANGE THIS
+# 不要修改此选项
+version: ${version}
+# 启用更新检查
+updateCheck: false
+
+# api-http 的地址
+host: localhost:8080
+# api-http 中的 authKey 用于验证身份
+Key: 123456
+# bot 的QQ
+botID: 123456789
+# bot 默认启用的群号
+# 可以为多个群
+groupID:
+  - 987654321
+  - 123456789
+
+# 启用bot
+enableBot: false
+
+# 游戏消息转发到群里的间隔
+# 防止莫名其妙的转发不了游戏内的消息
+# 单位为 tick, 每 20tick 为 1s
+sendDelay: 10
+
+# 验证消息失效时间， 单位: 分钟
+codeExpireTime: 5
+# 发送验证消息冷却时间，单位：分钟
+codeCoolDown: 1
+
+# 时间格式
+# 用于展示群消息发送时间
+timeFormat: yyyy.MM.dd HH:mm:ss
+
+# 调试模式
+# 非必要无需打开
+# 否则只会增多无用的日志输出！
+DEBUG: false
