@@ -20,8 +20,8 @@
 ### 插件分类
 |类型|说明|备注|
 |---|---|---|
-|EasyBot-API|提供的标准开发API|[[开发示例]]() & [[JavaDoc]]()|
-|Plugin_withMirai-api-http|使用mirai-api-http作为媒介来进行消息互通的插件|[[详情]]()|
+|EasyBot-API|提供的标准开发API|[[开发示例]](https://gitee.com/ed3/easyBot_Reloaded/blob/master/doc/API.md) & [[JavaDoc(施工中)]]()|
+|Plugin_withMirai-api-http|使用mirai-api-http作为媒介来进行消息互通的插件|[[详情]](https://gitee.com/ed3/easyBot_Reloaded/blob/master/doc/plugin_withMirai-api-http.md)|
 |...待开发中(咕咕咕)|to be continued...|未完待续...|
 
 ### 升级新版本
@@ -52,7 +52,6 @@
 /bot migrate 对 2.0 版本以下的数据进行迁移
 
 /bot bindChange|bc <之前绑定的qq> <新绑定的qq> 修改绑定的QQ
-/bot adminBindChange|abc <player> <qq> 强行修改玩家绑定的qq
 ```
 
 + 权限:
@@ -94,7 +93,7 @@ bot.abc 管理员修改玩家绑定的qq
 ### 常见问题
 - #### **变量名无法正常显示**
     - 请检查服务器是否装上了 `PlaceHolderAPI` 插件，[[下载地址]](https://www.spigotmc.org/resources/placeholderapi.6245/)
-    - 为了图省事，作者在对于显示玩家名这里直接用了扩展变量，请检查是否装了 `player` 扩展变量。
+    - 为了省事（懒），作者在对于显示玩家名这里直接用了扩展变量，请检查是否装了 `player` 扩展变量。
       如果没有安装，请输入 `/papi ecloud download player` 以安装
 
 - #### **一定要绑定才可使用本插件吗？**
@@ -107,7 +106,7 @@ bot.abc 管理员修改玩家绑定的qq
       有条件的还是尽量选择 Github 并给个 Star 吧，这也是对作者的一份支持嘛(也别忘了我啊[doge])
 
 - #### **关于提问/寻求帮助**
-    - 有任何问题欢迎开 `issue` /[[加群提问]](https://jq.qq.com/?_wv=1027&k=luSrM89l)，为了高效率的解决问题，请你在**确保读完所有文档内容**之后进行提问。同时需要您尽可能提供以下内容:
+    - 有任何问题欢迎开 `issue` / [[加群提问]](https://jq.qq.com/?_wv=1027&k=luSrM89l) ，为了高效率的解决问题，请你在**确保读完所有文档内容**之后进行提问。同时需要您尽可能提供以下内容:
   
 1. 您服务器核心的版本，示例：`Spigot-1.12.2` / `paper 1.12`
 2. 您目前使用的本插件的版本，示例： `EasyBot-2.0-B1`/ `2.0-B1` ...
