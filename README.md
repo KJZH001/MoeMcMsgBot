@@ -58,10 +58,7 @@
 
 ```text
 bot.reload 重载插件
-bot.on 启用bot
-bot.off 禁用bot
 bot.debug 调试输出信息
-bot.abc 管理员修改玩家绑定的qq
 ```
 
 ### PAPI变量
