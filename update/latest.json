@@ -1,6 +1,7 @@
 {
   "Versions": {
     "Plugin_api-http": {
+      "priority": 1,
       "version": "2.0.0-B1",
       "descriptions": "使用 mirai-api-http 作为媒介来进行消息互通的插件",
       "updateLogs": [
