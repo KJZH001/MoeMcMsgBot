@@ -57,7 +57,7 @@ public class BindChange {
 
         sender.sendMessage(ilu.getLangText("playerBindChange"));
 
-        Integer verifyCode = BotUtils.genVerifyCode();
+        String verifyCode = BotUtils.genVerifyCode();
 
         try {
             BotAPI.getIbu().getAllGroups().forEach((groupID, group) -> {
@@ -85,7 +85,7 @@ public class BindChange {
             });
         } catch (Error ignored) {}
 
-        System.out.println(BotUtils.getVerifyingPlayers());
+        System.out.print(BotUtils.getVerifyingPlayers());
     }
 
     private boolean isQQ(@NotNull String qq) {

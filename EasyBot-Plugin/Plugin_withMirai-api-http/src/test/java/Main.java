@@ -3,7 +3,7 @@ import java.security.SecureRandom;
 public class Main {
     public static void main(String[] args) {
         for (int i = 0; i < 10; i++) {
-            System.out.println(genVerifyCode(5));
+            System.out.print(genVerifyCode(5));
             Integer.parseInt(args[1]);
         }
 

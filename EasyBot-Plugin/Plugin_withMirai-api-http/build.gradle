@@ -9,7 +9,7 @@ repositories {
     mavenCentral()
 }
 
-version '2.0.0-B1'
+version '2.0.0-B2'
 
 processResources {
     from(sourceSets.main.resources.srcDirs) {
@@ -17,7 +17,8 @@ processResources {
         include 'plugin.yml', 'config.yml', 'lang.yml'
         expand(
                 version: version,
-                desc: 'EasyBot-Plugin_api-http'
+                desc: 'EasyBot-Plugin_api-http',
+                priority: 1
         )
     }
 }

@@ -2,7 +2,7 @@ package me.ed333.easybot.api;
 
 import me.ed333.easybot.api.utils.*;
 
-public class BotAPI {
+public final class BotAPI {
     private static IBotUtils iBotUtils;
     private static IBotMiraiHttpUtils iBotMiraiHttpUtils;
 

@@ -35,14 +35,14 @@ public class Bind {
             return;
         }
 
-        Long qq = Long.parseLong(args[1]);
-        Integer verifyCode = BotUtils.genVerifyCode();
-
         // 检查是否处于已绑定状态
         if (BotAPI.getIbu().name_isBound(sender.getName())) {
             sender.sendMessage(ilu.getLangText("NameIsBound"));
             return;
         }
+
+        Long qq = Long.parseLong(args[1]);
+        String verifyCode = BotUtils.genVerifyCode();
 
         // 检查输入的qq是否已绑定
         if (BotAPI.getIbu().qq_isBound(qq)) {
@@ -58,7 +58,6 @@ public class Bind {
         }
 
         try {
-
             try {
                 // 将原有的验证状态删除
                 BotUtils.getVerifyingPlayers().forEach((verifyingPlayer, code) -> {
@@ -78,18 +77,14 @@ public class Bind {
                     MessageChain chain = new MessageChain().addPlain(
                             ilu.getLangText("verify_text", p)
                                     .replace("\\n", "\n")
-                                    .replace("%1", verifyCode + "")
+                                    .replace("%1", verifyCode)
                                     .replace("%2", Configs.CODE_EXPIRE_TIME.getString())
                     );
                     section.addMessageChain(chain);
-
                     group.sendTempMessage(qq, section);
-
                     sender.sendMessage(ilu.getLangText("verify_msgSend"));
                     BotUtils.addVerifyingPlayer(vfp, verifyCode);
-
                     vfp.runTaskLater(Main.getPlugin(Main.class), Configs.CODE_EXPIRE_TIME.getInt()*60*20).getTaskId();
-
                     // 跳出循环
                     throw new Error();
                 }

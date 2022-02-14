@@ -3,8 +3,6 @@ package me.ed333.easybot.plugin.with_mirai_api_http;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public enum Configs {
     CFG_VERSION("version"),
     UPDATE_CHECK("updateCheck"),
@@ -30,6 +28,4 @@ public enum Configs {
     public @NotNull Long getLong() { return config.getLong(key); }
 
     public @NotNull Boolean getBoolean() { return config.getBoolean(key); }
-
-    public @NotNull List<String> getStringList() { return config.getStringList(key); }
 }

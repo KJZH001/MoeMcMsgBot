@@ -6,7 +6,7 @@
 #=====+=====+=====+=====+=====+=====+=====+
 # DO NOT CHANGE THIS
 # 不要修改此选项
-version: ${version}
+version: ${priority}
 # 启用更新检查
 updateCheck: false
 

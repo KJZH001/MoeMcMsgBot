@@ -85,7 +85,15 @@ public class ConfigManager implements IConfigManager {
     @Override
     public void checkFile() {
         try {
-            if (!dataFile.createNewFile()) dataFile.createNewFile();
+            if (!cm.getConfigFile().exists()) {
+                Main.getPlugin(Main.class).saveResource("config.yml",false);
+            }
+            if (!cm.getLangFile().exists()) {
+                Main.getPlugin(Main.class).saveResource("lang.yml", false);
+            }
+            if (!dataFile.createNewFile()) {
+                dataFile.createNewFile();
+            }
 
             config = YamlConfiguration.loadConfiguration(configFile);
             lang = YamlConfiguration.loadConfiguration(langFile);

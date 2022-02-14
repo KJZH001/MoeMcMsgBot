@@ -16,5 +16,5 @@ tasks.withType(Javadoc) {
 }
 
 dependencies {
-    implementation 'xyz.upperlevel.spigot.book:spigot-book-api:1.5'
+
 }

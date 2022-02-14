@@ -6,8 +6,10 @@ import me.ed333.easybot.plugin.with_mirai_api_http.utils.BotUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Verify {
@@ -43,7 +45,7 @@ public class Verify {
 
             BotUtils.getVerifyingPlayers().forEach((vfp, code) -> {
                 if (vfp.getPlayer().equals(p)) {
-                    if (Integer.parseInt(args[1]) == code) {
+                    if (Objects.equals(args[1], code)) {
                         ConfigurationSection section = BotAPI.getiConfigManager().getData().getConfigurationSection("Player");
                         if (section != null) {
                             section.set(p.getUniqueId() + ".bind", vfp.getQQ());
@@ -62,7 +64,7 @@ public class Verify {
         } catch (Error ignored) {}
     }
 
-    private boolean isCode(String code) {
+    private boolean isCode(@NotNull String code) {
         if (code.length() != 6) {
             return false;
         }

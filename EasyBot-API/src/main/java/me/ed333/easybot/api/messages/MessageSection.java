@@ -17,6 +17,7 @@ public class MessageSection {
      */
     public MessageSection(Long target, Long qq) {
         sectionJson.addProperty("target", target);
+        sectionJson.addProperty("group", target);
         sectionJson.addProperty("qq", qq);
         sectionJson.addProperty("sessionKey", BotAPI.getIBotMiraiHttpUtils().getSession());
     }
@@ -29,7 +30,7 @@ public class MessageSection {
      * @return {@link MessageSection}
      */
     public MessageSection setQuote(int code) {
-        if (quote != 0) {
+        if (quote == 0) {
             quote = code;
             sectionJson.addProperty("quote", code);
         } else {

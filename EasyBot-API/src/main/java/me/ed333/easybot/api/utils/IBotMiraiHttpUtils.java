@@ -18,4 +18,6 @@ public interface IBotMiraiHttpUtils extends IBotUtils {
      * @return session
      */
     String getSession();
+
+    String messageFromId(Integer id);
 }

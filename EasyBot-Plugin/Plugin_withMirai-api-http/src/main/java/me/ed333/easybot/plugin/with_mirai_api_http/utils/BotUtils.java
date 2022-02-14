@@ -32,8 +32,7 @@ import java.net.URISyntaxException;
 import java.security.SecureRandom;
 import java.util.*;
 
-import static me.ed333.easybot.plugin.with_mirai_api_http.utils.HttpRequestUtils.doGet;
-import static me.ed333.easybot.plugin.with_mirai_api_http.utils.HttpRequestUtils.doPost;
+import static me.ed333.easybot.plugin.with_mirai_api_http.utils.HttpRequestUtils.*;
 
 public class BotUtils implements IBotMiraiHttpUtils {
     private static String apiVer;
@@ -45,14 +44,14 @@ public class BotUtils implements IBotMiraiHttpUtils {
     private static final String url = Configs.HOST.getString();
     private static final String key = Configs.KEY.getString();
     private static final JsonParser jp = new JsonParser();
-    private static final HashMap<VerifyingPlayer, Integer> verifyingPlayer = new HashMap<>();
+    private static final HashMap<VerifyingPlayer, String> verifyingPlayer = new HashMap<>();
     private static final Set<Player> playerInCool = new HashSet<>();
     private static final Set<Player> enableBotPlayer = new HashSet<>();
     private static final HashMap<Long, IGroup> groups = new HashMap<>();
     private static final HashMap<Long,String> bindQQ = new HashMap<>();
     private static final ConsoleCommandSender sender = Bukkit.getConsoleSender();
 
-    public static void apiVer() {
+    private static void apiVer() {
         apiVer = jp.parse(doGet(String.format("http://%s/about", url))).getAsJsonObject().get("data").getAsJsonObject().get("version").getAsString();
     }
 
@@ -88,7 +87,9 @@ public class BotUtils implements IBotMiraiHttpUtils {
 
     @Override
     public String getGameName(long qqNum) {
-        return bindQQ.getOrDefault(qqNum, "null");
+        String result = bindQQ.getOrDefault(qqNum, "null");
+        DEBUG.debugInfo(String.format("Get game name by qq number: %s, the result is %s", qqNum, result));
+        return result;
     }
 
     @Override
@@ -108,56 +109,62 @@ public class BotUtils implements IBotMiraiHttpUtils {
         }
 
         txt.setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, String.format("#reply_%s#", Vars.msgID)));
+        DEBUG.debugInfo(String.format("Get game name by qq number: %s (to text component)", qqNum));
         return txt;
     }
 
     @Override
     public boolean qq_isBound(long qqNum) {
-        return bindQQ.containsKey(qqNum);
+        boolean result = bindQQ.containsKey(qqNum);
+        DEBUG.debugInfo(String.format("Check the qq number %b whether is bound, the return value is %b", qqNum, result));
+        return result;
     }
 
     @Override
     public boolean name_isBound(String name) {
+        boolean result = false;
         for (Long qq : bindQQ.keySet()) {
             if (bindQQ.get(qq).equals(name) && (qq != 0L)) {
-                return true;
+                result = true;
             }
         }
-        return false;
+        DEBUG.debugInfo(String.format("Check player name %s whether is bound, the return value is %b", name, result));
+        return result;
     }
 
     @Override
     public void addEnableBotPlayer(Player p) {
         enableBotPlayer.add(p);
-        DEBUG.debugInfo("Action: add an enabled bot player.");
+        DEBUG.debugInfo("Add an enabled bot player.");
     }
 
     @Override
     public void addEnableBotPlayers(Set<Player> p) {
         enableBotPlayer.addAll(p);
-        DEBUG.debugInfo("Action: add enabled bot players.");
+        DEBUG.debugInfo("Add enabled bot players.");
     }
 
     @Override
     public void removeEnableBotPlayer(Player p) {
         enableBotPlayer.remove(p);
-        DEBUG.debugInfo("Action: remove enabled bot player.");
+        DEBUG.debugInfo("Remove an enabled bot player.");
     }
 
     @Override
     public void removeEnableBotPlayers(Set<Player> p) {
         enableBotPlayer.removeAll(p);
-        DEBUG.debugInfo("Action: remove enabled bot players.");
+        DEBUG.debugInfo("Remove enabled bot players.");
     }
 
     @Override
     public void removeAllEnabledBotPlayers() {
         enableBotPlayer.clear();
-        DEBUG.debugInfo("Action: remove all enabled bot players.");
+        DEBUG.debugInfo("Remove all enabled bot players.");
     }
 
     @Override
     public Set<Player> getEnabledPlayers() {
+        DEBUG.debugInfo("Get enabled bot players.");
         return enableBotPlayer;
     }
 
@@ -188,13 +195,14 @@ public class BotUtils implements IBotMiraiHttpUtils {
         if (result.get("code").getAsInt() == 0) {
             sender.sendMessage("§3BOT: §a释放完成");
             initialized = false;
-            DEBUG.debugInfo("Action: Close socket client, api-http: " + apiVer + ", result ->" + result);
+            DEBUG.debugInfo("Close socket client, api-http: " + apiVer + ", result ->" + result);
         } else {
             sender.sendMessage("§3BOT: §c释放失败！原因: " + result);
         }
     }
 
     public static void initialize() {
+        apiVer();
         JsonObject authResult = jp.parse(auth()).getAsJsonObject();
         if (authResult.get("code").getAsInt() == 0) {
             sender.sendMessage("§3BOT: §a验证身份成功!");
@@ -232,13 +240,22 @@ public class BotUtils implements IBotMiraiHttpUtils {
                 }
             } else sender.sendMessage("§3BOT: §c绑定失败！返回结果: §7" + verifyResult);
         } else sender.sendMessage("§3BOT: §c验证失败！返回结果: " + authResult);
+
+    }
+
+    @Override
+    public String messageFromId(Integer id) {
+        String url = String.format("http://%s/messageFromId?sessionKey=%s&id=%s", BotUtils.url, session, id);
+        JsonElement result = new JsonParser().parse(doGet(url)).getAsJsonObject().get("data");
+        DEBUG.debugInfo(String.format("Get a message from msgId, result: %s", result));
+        return result + "";
     }
 
     private static void connect() throws URISyntaxException {
         sender.sendMessage("§3BOT: §a连接服务器中...");
-        URI uri_api_2 = new URI("ws://" + Configs.HOST.getString() + "/all?verifyKey=" + Configs.KEY.getString() + "&qq=" + botID);
+        URI uri_api_2 = new URI(String.format("ws://%s/all?verifyKey=%s&qq=%d", url, Configs.KEY.getString(), botID));
         client = new SocketClient(uri_api_2);
-        DEBUG.debugInfo("Action: Connect Socket, api-http: " + apiVer);
+        DEBUG.debugInfo("Connect Socket, api-http: " + apiVer);
         client.connect();
     }
 
@@ -248,7 +265,7 @@ public class BotUtils implements IBotMiraiHttpUtils {
         request.addProperty("sessionKey", session);
         request.addProperty("qq", botID);
         String result = doPost("http://" + url + "/bind", request);
-        DEBUG.debugInfo("Action: Verify Session, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        DEBUG.debugInfo("Verify Session, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
         return result;
     }
 
@@ -258,7 +275,7 @@ public class BotUtils implements IBotMiraiHttpUtils {
         request.addProperty("sessionKey", session);
         request.addProperty("qq", botID);
         result = doPost("http://" + url + "/release", request);
-        DEBUG.debugInfo("Action: Release session, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
+        DEBUG.debugInfo("Release session, api-http: " + apiVer + ", request ->" + request + ", result ->" + result);
         return result;
     }
 
@@ -266,20 +283,20 @@ public class BotUtils implements IBotMiraiHttpUtils {
         sender.sendMessage("§3BOT: §a注册bot...");
         JsonObject request = new JsonObject();
         request.addProperty("verifyKey", key);
-        String result = doPost("http://" + url + "/verify", request);
-        DEBUG.debugInfo("Action: AuthBot, api-http: " + apiVer +", request ->" + request + ", result ->" + result);
+        String result = doPost(String.format("http://%s/verify", url), request);
+        DEBUG.debugInfo(String.format("AuthBot, api-http: %s, request: %s result: %s", apiVer, request, result));
         return result;
     }
 
     private static String getGroupInfo(Long id) {
         String result = doGet(String.format("http://%s/groupConfig?sessionKey=%s&target=%d", url, session, id));
-        DEBUG.debugInfo("Action: getGroupInfo, api-http: " + apiVer + ", result ->" + result);
+        DEBUG.debugInfo("getGroupInfo, api-http: " + apiVer + ", result ->" + result);
         return result;
     }
 
     private static String getGroupMembers(Long id) {
         String result = doGet(String.format("http://%s/memberList?sessionKey=%s&target=%d", url, session, id));
-        DEBUG.debugInfo("Action: getMemberInfo, api-http: " + apiVer + ", result ->" + result);
+        DEBUG.debugInfo("getMemberInfo, api-http: " + apiVer + ", result ->" + result);
         return result;
     }
 
@@ -293,11 +310,11 @@ public class BotUtils implements IBotMiraiHttpUtils {
         }
     }
 
-    public static HashMap<VerifyingPlayer, Integer> getVerifyingPlayers() {
+    public static HashMap<VerifyingPlayer, String> getVerifyingPlayers() {
         return verifyingPlayer;
     }
 
-    public static void addVerifyingPlayer(VerifyingPlayer p, Integer code) { verifyingPlayer.put(p, code); }
+    public static void addVerifyingPlayer(VerifyingPlayer p, String code) { verifyingPlayer.put(p, code); }
 
     public static void remVerifyPlayer(VerifyingPlayer p) { verifyingPlayer.remove(p); }
 
@@ -315,10 +332,12 @@ public class BotUtils implements IBotMiraiHttpUtils {
         bindQQ.put(qq, name);
     }
 
-    public static @NotNull Integer genVerifyCode() {
+    public static @NotNull String genVerifyCode() {
+        StringBuilder sb = new StringBuilder();
         SecureRandom rm = new SecureRandom();
-        double pross = (1 + rm.nextDouble()) * Math.pow(10, 6);
-        String fixLenthString = String.valueOf(pross);
-        return Integer.parseInt(fixLenthString.substring(1, 7));
+        while (sb.length() < 6) {
+            sb.append(rm.nextInt(10));
+        }
+        return sb.toString();
     }
 }

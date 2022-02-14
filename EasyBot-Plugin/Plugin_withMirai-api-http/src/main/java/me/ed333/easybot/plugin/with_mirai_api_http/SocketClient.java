@@ -39,12 +39,12 @@ public class SocketClient extends WebSocketClient {
     @Override
     public void onClose(int i, String reason, boolean b) {
         isConnected = false;
-        sender.sendMessage("§3BOT: §e从 SocketServer 断开连接! 原因: " + reason);
+        sender.sendMessage("§3BOT: §e从 SocketServer 断开连接! 原因: ");
     }
 
     @Override
     public void onError(@NotNull Exception ex) {
-        sender.sendMessage("§3BOT: §c出错了！原因: " + ex.getLocalizedMessage());
+        sender.sendMessage("§3BOT: §c出错了！原因: " + ex.getMessage());
         ex.printStackTrace();
     }
 }

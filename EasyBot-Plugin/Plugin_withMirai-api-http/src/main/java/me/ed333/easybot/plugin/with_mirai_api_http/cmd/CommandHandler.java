@@ -1,5 +1,6 @@
 package me.ed333.easybot.plugin.with_mirai_api_http.cmd;
 
+import me.ed333.easybot.api.BotAPI;
 import me.ed333.easybot.plugin.with_mirai_api_http.cmd.sub.BindChange;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,9 +25,12 @@ public class CommandHandler implements CommandExecutor {
                 Constructor<?> subConstructor = subCmdClass.getConstructor(CommandSender.class, String[].class);
                 subConstructor.newInstance(sender, args);
             } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-                //
-                // sender.sendMessage(BotAPI.getILanguageUtils().getLangText("unKnowCmd"));
+                if (e.getClass().getName().equals("ClassNotFoundException") || e.getClass().getName().equals("NoSuchMethodException")) {
+                    sender.sendMessage(BotAPI.getILanguageUtils().getLangText("unKnowCmd"));
+                } else {
+                    sender.sendMessage("§3BOT: §c在处理命令时发生错误：");
+                    e.printStackTrace();
+                }
             }
         }
         return false;
