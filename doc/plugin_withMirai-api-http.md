@@ -108,7 +108,7 @@ enableBot: false
 #=====+=====+=====+=====+=====+=====+=====+
 # DO NOT CHANGE THIS
 # 不要修改此选项
-version: ${version}
+version: ${priority}
 # 启用更新检查
 updateCheck: false
 
@@ -123,18 +123,6 @@ botID: 123456789
 groupID:
   - 987654321
   - 123456789
-
-# 将消息在群内进行同步
-# 当上方的群号为多个时该选项内容可生效
-# 即在 A 群发送的消息会通过机器人转发到 B 群
-GroupToGroup:
-  enable: true
-  # 哪些群需要进行此操作？
-  # 该示例为所有群
-  groups:
-    - '*'
-    # - 123456789
-    # - 987654321
 
 # 启用bot
 enableBot: false
