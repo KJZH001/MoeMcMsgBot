@@ -1,6 +1,5 @@
 rootProject.name = 'EasyBot'
 include 'EasyBot-API'
-include 'EasyBot-Plugin'
 
-include 'EasyBot-Plugin:Plugin_withMirai-api-http'
+include 'Plugin_withMirai-api-http'
 

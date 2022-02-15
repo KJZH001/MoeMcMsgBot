@@ -11,10 +11,4 @@ task sourceJar(type:Jar) {
     from sourceSets.main.allSource
 }
 
-tasks.withType(Javadoc) {
-    options.encoding("UTF8")
-}
-
-dependencies {
-
-}
+dependencies { }

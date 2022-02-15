@@ -20,8 +20,8 @@
 ### 插件分类
 |类型|说明|备注|
 |---|---|---|
-|EasyBot-API|提供的标准开发API|[[开发示例]](https://gitee.com/ed3/easyBot_Reloaded/blob/master/doc/API.md) & [[JavaDoc(施工中)]]()|
-|Plugin_withMirai-api-http|使用mirai-api-http作为媒介来进行消息互通的插件|[[详情]](https://gitee.com/ed3/easyBot_Reloaded/blob/master/doc/plugin_withMirai-api-http.md)|
+|EasyBot-API|提供的标准开发API|[[开发示例]](doc/API.md) & [[JavaDoc(施工中)]]()|
+|Plugin_withMirai-api-http|使用mirai-api-http作为媒介来进行消息互通的插件|[[详情]](doc/plugin_withMirai-api-http.md)|
 |...待开发中(咕咕咕)|to be continued...|未完待续...|
 
 ### 升级新版本
@@ -36,8 +36,6 @@
 
 ```text
 /bot help
-/bot on 全局启用对群内的消息转发
-/bot off 全局关闭对群内的消息转发
 /bot reload 重载bot
 /bot enable 打开对自己群内的消息转发
 /bot disable 关闭对自己群内的消息转发
@@ -49,9 +47,7 @@
 
  以下是 2.0 版本及以上特有的 
  
-/bot init 初始化 Bot， 用户可根据引导配置本插件
 /bot migrate 对 2.0 版本以下的数据进行迁移
-
 /bot bindChange|bc <之前绑定的qq> <新绑定的qq> 修改绑定的QQ
 ```
 
@@ -100,8 +96,6 @@ bot.debug 调试输出信息
 
 - #### **关于滑块验证**
     - 请使用工具(手机app): [[滑动验证助手(Github地址)]](https://github.com/mzdluo123/TxCaptchaHelper) <br/>
-      考虑到部分用户无法正常访问Github， 故贴上[[网盘]](https://wwr.lanzoui.com/ivUoirq79yd) ，密码:5cyj<br/>
-      有条件的还是尽量选择 Github 并给个 Star 吧，这也是对作者的一份支持嘛(也别忘了我啊[doge])
 
 - #### **关于提问/寻求帮助**
     - 有任何问题欢迎开 `issue` / [[加群提问]](https://jq.qq.com/?_wv=1027&k=luSrM89l) ，为了高效率的解决问题，请你在**确保读完所有文档内容**之后进行提问。同时需要您尽可能提供以下内容:

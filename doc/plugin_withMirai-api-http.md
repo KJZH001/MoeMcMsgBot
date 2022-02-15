@@ -108,9 +108,9 @@ enableBot: false
 #=====+=====+=====+=====+=====+=====+=====+
 # DO NOT CHANGE THIS
 # 不要修改此选项
-version: ${priority}
+version: 1
 # 启用更新检查
-updateCheck: false
+updateCheck: true
 
 # api-http 的地址
 host: localhost:8080
